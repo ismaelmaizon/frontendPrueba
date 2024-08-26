@@ -37,9 +37,10 @@ export default function NavBar() {
     };    
     const links = [
       {text: 'Agregar Producto', url: '/addproducto', icon: AddIcon },
-      {text: 'Agregar Lugar', url: '/addlugar', icon: BackupIcon },
-      {text: 'Agregar Tipo', url: '/addtipo', icon: DeleteIcon },
-      {text: 'Modificar Stock', url: '/', icon: AssignmentIcon }
+      {text: 'Agregar Lugar', url: '/addlugar', icon: AddIcon },
+      {text: 'Eliminar Lugar', url: '/deleteLugar', icon: DeleteIcon },
+      {text: 'Agregar Tipo', url: '/addtipo', icon: AddIcon },
+      {text: 'Eliminar Tipo', url: '/deleteTipo', icon: DeleteIcon },
     ]
   
     const list = (anchor) => (

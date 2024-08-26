@@ -10,7 +10,6 @@ import Productos from "../productos/productos";
 //icons
 import Ventas from "../ventas/ventas";
 import Producto from "../producto/producto";
-import Ubiproducto from "../ubiproducto/ubiproducto";
 import Venta from "../venta/venta";
 
 export default function Inicio() {
@@ -31,8 +30,10 @@ export default function Inicio() {
                 }
             })
         })
-        setInfoprod(info)        
-
+        setInfoprod(info)    
+        console.log(vprod);
+        console.log(vent);
+        
     }, [])
 
 

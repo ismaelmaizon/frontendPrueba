@@ -6,15 +6,16 @@ import { MiContexto } from "../context/context"
 import {Button, Card, CardContent, Grid, Typography} from '@mui/material';
 import { Link,  } from "react-router-dom"
 import Ubiproducto from "../ubiproducto/ubiproducto";
+import { useNavigate } from "react-router-dom";
 
 export default function Producto() {
     const {
         tipos,
         producto,
         getUbiProducto, setUbi,
-        setIdg, alert,
+        setIdg, alert, getProductoimg, setImgs
     } = useContext(MiContexto)
-
+    const router = useNavigate()
     const [ prod, setProd ] = useState({})
 
     useEffect(()=>{
@@ -84,9 +85,13 @@ export default function Producto() {
                                     }} >ver Ubicaciones</Button>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Link to='/detalle'>
-                                        <Button size="small" color="info" variant="contained">detalle</Button>
-                                    </Link>
+                                        <Button size="small" color="info" variant="contained" onClick={async ()=>{ 
+                                            const res = await getProductoimg(producto.IdGenerate) 
+                                            setImgs(res) 
+                                            if (res) {
+                                                router('/detalle')
+                                            }
+                                            }} >detalle</Button>
                                 </Grid>
                             </Grid>
                     </Grid> 

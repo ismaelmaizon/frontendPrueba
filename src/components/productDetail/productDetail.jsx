@@ -3,7 +3,7 @@ import { useContext, useEffect, useState} from "react"
 import { MiContexto } from "../context/context"
 
 //lugares
-import {Button, Card, CardActions, CardContent, Grid, Typography} from '@mui/material';
+import {Button, Card, CardActions, CardContent, CardMedia, Grid, Typography} from '@mui/material';
 //productos
 import { Link, useNavigate } from "react-router-dom";
 
@@ -13,7 +13,7 @@ export default function PorductDetail() {
         alert,
         tipos,
         producto,
-        setIdg, deleteProducto
+        deleteProducto, imgs
     } = useContext(MiContexto)    
 
     const router = useNavigate()
@@ -21,6 +21,7 @@ export default function PorductDetail() {
     const [ prod, setProd ] = useState({})
 
     useEffect(()=>{
+        console.log(imgs[0].url);
         tipos.map((ti)=>{
             console.log(ti.id);
             console.log(producto.Tipo)
@@ -66,12 +67,11 @@ export default function PorductDetail() {
                         </Typography>
                     </CardContent>
                 </Grid>
-                <CardActions  >
-                    <Link to='/addproductLug' >
-                        <Button size="small" color="info" variant="contained" onClick={ async ()=>{
-                            setIdg(producto.IdGenerate)
-                        }} >agaregara a lugar</Button>
-                    </Link>  
+                <CardActions>
+                    <Button size="small" color="info" variant="contained">
+                    ingresar imagen
+                    <input style={{ width: '100px', height: '20px' }} type="file" ></input>  
+                    </Button>
                     <Link to='/' >
                         <Button size="small" color="info" variant="contained" >volver</Button>
                     </Link>   
@@ -83,6 +83,11 @@ export default function PorductDetail() {
                             
                         }} >eliminar</Button>
                 </CardActions>
+                <CardMedia
+                    sx={{ height: 500 }}
+                    image={`http://localhost:8080/static/${imgs[0].url}`}
+                    title="green iguana"
+                />
                 </Card>
              }
         </div>

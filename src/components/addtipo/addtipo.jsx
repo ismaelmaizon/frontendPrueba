@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AddTipo () {
 
-    const {createTipo, alert} = useContext(MiContexto)
+    const {createTipo, alert, getTipos, refresh} = useContext(MiContexto)
 
     const router = useNavigate()
 
@@ -42,15 +42,26 @@ export default function AddTipo () {
                         <TextField fullWidth label='Descripcion' name='Descripcion' type="text" onChange={dataFrom}></TextField>
                         </Grid>
                     </Grid>      
-            <Button type="submit" variant="contained" size="small" sx={{ width:'200px', margin: 'auto' }} onClick={ async ()=>{
-                console.log(data);
-                let respon = await createTipo(data)
-                console.log(respon.status);
-                if (respon.status == 200) {
-                    await alert('success')
-                    router('/')
-                }
-            }}  >crear</Button>
+            <Grid container direction='row' sx={{ width:'500px', margin: 'auto' }} spacing={5} >
+                    <Grid item xs={6}  >
+                    <Button type="submit" variant="contained" size="small" sx={{ width:'200px', margin: 'auto' }} onClick={ async ()=>{
+                        console.log(data);
+                        let respon = await createTipo(data)
+                        console.log(respon.status);
+                        if (respon.status == 200) {
+                            await getTipos()
+                            await alert('success')
+                            router('/')
+                        }
+                    }}  >crear</Button>
+                    </Grid>
+                    <Grid item xs={6}  >
+                        <Button type="submit" variant="contained" size="small" sx={{ width:'200px'}} onClick={()=>{
+                            refresh()
+                            router('/')
+                        }}>volver</Button>
+                    </Grid>
+                </Grid>
             </Box>
         </Box>
     )

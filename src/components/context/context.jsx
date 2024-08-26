@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 
 export const MiContexto = createContext([])
 
+const URL = import.meta.env.VITE_BACKEND_URL
 
 const CartProvider = ( { children } ) => {
   //vista
@@ -22,7 +23,7 @@ const CartProvider = ( { children } ) => {
         Descripcion: data.Descripcion 
       }
       try {
-        const response = await fetch('http://localhost:8080/api/tipos/createTipo', {
+        const response = await fetch( `http://${URL}/api/tipos/createTipo`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -44,7 +45,7 @@ const CartProvider = ( { children } ) => {
   const [tipos, setTipos] = useState([])
   const getTipos = async () =>{
       try {
-          const response = await fetch('http://localhost:8080/api/tipos/getTipos')
+          const response = await fetch(`http://${URL}/api/tipos/getTipos`)
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -63,7 +64,7 @@ const CartProvider = ( { children } ) => {
       fullname: data.fullname
     }
     try {
-      const response = await fetch('http://localhost:8080/api/lugares/lugares', {
+      const response = await fetch(`http://${URL}/api/lugares/lugares`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -83,7 +84,7 @@ const CartProvider = ( { children } ) => {
   const [lugares, setLugares] = useState([])
   const getLugares = async () =>{
       try {
-          const response = await fetch('http://localhost:8080/api/lugares/lugares')
+          const response = await fetch(`http://${URL}/api/lugares/lugares`)
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -101,7 +102,7 @@ const CartProvider = ( { children } ) => {
   const [productos, setProductos] = useState([])
   const getProductos = async () =>{
       try {
-          const response = await fetch('http://localhost:8080/api/productos/productos')
+          const response = await fetch(`http://${URL}/api/productos/productos`)
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -117,7 +118,7 @@ const CartProvider = ( { children } ) => {
   const [producto, setProducto] = useState([])
   const getProducto = async (id) =>{
       try {
-          const response = await fetch(`http://localhost:8080/api/productos/producto/${id}`)
+          const response = await fetch(`http://${URL}/api/productos/producto/${id}`)
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -129,12 +130,27 @@ const CartProvider = ( { children } ) => {
         }
       
   }
+  //obtener imagenes del producto
+  const [imgs, setImgs] = useState([])
+  const getProductoimg = async (id) =>{
+    try {
+        const response = await fetch(`http://${URL}/api/productos/productoimg/${id}`)
+        if (!response.ok) {
+          throw new Error('problemas al consultar en la navegacion');
+        }
+        const data = await response.json();
+        return data
+      } catch (error) {
+        console.error('problemas con la consulta:', error);
+      }
+    
+}
   //obtener ubicacion de productos
   const [productoUbi, setProductoUbi] = useState([])
   const [infoprod, setInfoprod] = useState([])
   const getUbiProducto = async (id) =>{
     try {
-        const response = await fetch(`http://localhost:8080/api/lugaresProd/getUbicacionProducto/${id}`)
+        const response = await fetch(`http://${URL}/api/lugaresProd/getUbicacionProducto/${id}`)
         if (!response.ok) {
           throw new Error('problemas al consultar en la navegacion');
         }
@@ -153,7 +169,7 @@ const CartProvider = ( { children } ) => {
   const [productsLug, setProductsLug] = useState([])
   const getProductosLugar = async (id) =>{
     try {
-      const response = await fetch(`http://localhost:8080/api/lugaresProd/getProductosLugar/${id}`)
+      const response = await fetch(`http://${URL}/api/lugaresProd/getProductosLugar/${id}`)
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -166,7 +182,7 @@ const CartProvider = ( { children } ) => {
   }
   //crear producto
   //const [prodCreado, setPructoCreado] = useState(false)
-  const createProducto = async ( data ) =>{
+  const createProducto = async ( data, file ) =>{
     let prod = {
       Tipo: data.Tipo,
       Alto: data.Alto,
@@ -185,17 +201,19 @@ const CartProvider = ( { children } ) => {
     console.log(prod);
     
       try {
-        const response = await fetch('http://localhost:8080/api/productos/producto', {
+        const formData = new FormData();
+        formData.append('file',file); // 'archivo' debe ser el archivo que deseas enviar
+        formData.append('prod', JSON.stringify(prod)); // Puedes agregar otros datos como un JSON stringificado
+
+        const response = await fetch(`http://${URL}/api/productos/producto`, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(prod)
+
+          body: formData
         });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        
+        setVprod(false)
         return response
       } catch (error) {
         console.error('There was a problem with the fetch operation:', error);
@@ -205,7 +223,7 @@ const CartProvider = ( { children } ) => {
   //eliminar producto
   const deleteProducto = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/productos/producto/${id}`, {
+      const response = await fetch(`http://${URL}/api/productos/producto/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -231,7 +249,7 @@ const CartProvider = ( { children } ) => {
       "stock": stock
     }
     try {
-      const response = await fetch(`http://localhost:8080/api/lugaresProd/addProductoLugar/${Idg}`, {
+      const response = await fetch(`http://${URL}/api/lugaresProd/addProductoLugar/${Idg}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -257,7 +275,7 @@ const CartProvider = ( { children } ) => {
       "procedimiento": procedimiento,
     }
     try {
-      const response = await fetch(`http://localhost:8080/api/lugaresProd/updateProductoLugar/${Idg}`, {
+      const response = await fetch(`http://${URL}/api/lugaresProd/updateProductoLugar/${Idg}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -268,6 +286,9 @@ const CartProvider = ( { children } ) => {
         throw new Error('Network response was not ok');
       }
       console.log(response.status);
+      if( response.status == 200) {
+        setVprod(false) 
+      } 
       return response
     } catch (error) {
       console.error('There was a problem with the fetch operation:', error);
@@ -277,7 +298,7 @@ const CartProvider = ( { children } ) => {
   //actualizar stock del producto
   const updateStockProduct = async (id) =>{
     try {
-      const response = await fetch(`http://localhost:8080/api/lugaresProd/upDateStockProducto/${id}`, {
+      const response = await fetch(`http://${URL}/api/lugaresProd/upDateStockProducto/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -404,7 +425,7 @@ const CartProvider = ( { children } ) => {
     }
     console.log(venta);
     try {
-      const response = await fetch(`http://localhost:8080/api/ventas/registrarVenta`, {
+      const response = await fetch(`http://${URL}/api/ventas/registrarVenta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -424,7 +445,7 @@ const CartProvider = ( { children } ) => {
   const [ventas, setVentas] = useState([])
   const getVentas = async () =>{
     try {
-        const response = await fetch('http://localhost:8080/api/ventas/getVentas')
+        const response = await fetch(`http://${URL}/api/ventas/getVentas`)
         if (!response.ok) {
           throw new Error('problemas al consultar en la navegacion');
         }
@@ -439,7 +460,7 @@ const CartProvider = ( { children } ) => {
   const [ventainf, setVentainf] = useState([])
   const getVenta = async (id) =>{
       try {
-          const response = await fetch(`http://localhost:8080/api/ventas/getVentaId/${id}`)
+          const response = await fetch(`http://${URL}/api/ventas/getVentaId/${id}`)
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -457,7 +478,7 @@ const CartProvider = ( { children } ) => {
   const registrarProdsVenta = async (data) =>{
     console.log(data);
     try {
-      const response = await fetch(`http://localhost:8080/api/ventas/registrarProdVenta`, {
+      const response = await fetch(`http://${URL}/api/ventas/registrarProdVenta`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -516,58 +537,10 @@ const refreshVenta = () =>{
   setVentainf([])
 }
 
-  //Alertas
-  const alert = async (status) =>{
-    if (status == 'success') {
-      const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          }
-        });
-        Toast.fire({
-          icon: "success",
-          title: "Proceso exitoso"
-        });
-    }else if (status == 'error') {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        }
-      });
-      Toast.fire({
-        icon: "error",
-        title: "Problemas con el proceso"
-      });
-    }else if (status == 'warning') {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        }
-      });
-      Toast.fire({
-        icon: "warning",
-        title: "producto no se encuentra en ningun lugar"
-      });
-    }else if (status == 'succesStock') {
-      const Toast = Swal.mixin({
+//Alertas
+const alert = async (status) =>{
+  if (status == 'success') {
+    const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
         showConfirmButton: false,
@@ -580,9 +553,74 @@ const refreshVenta = () =>{
       });
       Toast.fire({
         icon: "success",
-        title: "Stock Actualizado"
+        title: "Proceso exitoso"
       });
-    }
+  }else if (status == 'error') {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "error",
+      title: "Problemas con el proceso"
+    });
+  }else if (status == 'warning') {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "warning",
+      title: "producto no se encuentra en ningun lugar"
+    });
+  }else if (status == 'succesStock') {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "success",
+      title: "Stock Actualizado"
+    });
+  }else if (status == 'errorCreate') {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      }
+    });
+    Toast.fire({
+      icon: "error",
+      title: "El Producto ya existe"
+    });
+  }
+
 }
       
 
@@ -601,6 +639,7 @@ const refreshVenta = () =>{
         createProducto, deleteProducto,
         productos, setProductos, getProductos,
         producto, setProducto, getProducto, idg, setIdg,
+        getProductoimg, imgs, setImgs,
         productoUbi, setProductoUbi, getUbiProducto, infoprod, setInfoprod,
         updateStockProduct,
         getProductosLugar, productsLug, setProductsLug,
