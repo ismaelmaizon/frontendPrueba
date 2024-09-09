@@ -1,4 +1,4 @@
-import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/material";
+import { Box, Button, Card, Grid, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { MiContexto } from "../context/context";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,12 +6,14 @@ import LocalPrintshopIcon from '@mui/icons-material/LocalPrintshop';
 import SendIcon from '@mui/icons-material/Send';
 
 
-import { Page, Text, View, Document, StyleSheet, Image, PDFDownloadLink } from '@react-pdf/renderer';
+import { Page, Text, View, Document, PDFDownloadLink, StyleSheet } from '@react-pdf/renderer';
 
 
 export default function Dashboard () {
 
-    const {venta, alert, setCart, setVenta,
+    const {
+        tipos,
+        venta, alert, setCart, setVenta,
         registrarProdsVenta,updateproductolugar,updateStockProduct
     } = useContext(MiContexto)
 
@@ -20,6 +22,32 @@ export default function Dashboard () {
 
     const [cliente, setCliente ] = useState({})
     const [carro, setCarro ] = useState([])
+        // Create styles
+    const styles = StyleSheet.create({
+        page: {
+        flexDirection: 'row',
+        backgroundColor: '#E4E4E4',
+        },
+        section: {
+        margin: 10,
+        padding: 10,
+        flexGrow: 1,
+        },
+    });
+    /*
+    // Create Document Component
+    const MyDocument = () => (
+        <Document>
+        <Page size="A4" style={styles.page}>
+            <View style={styles.section}>
+            <Text>Section #1</Text>
+            </View>
+            <View style={styles.section}>
+            <Text>Section #2</Text>
+            </View>
+        </Page>
+        </Document>
+    );*/
     
     // Create Document Component
     function MyDocument () {
@@ -82,9 +110,7 @@ export default function Dashboard () {
         </Document>
     )}
 
-    useEffect(()=>{
-        console.log(venta);
-        console.log(venta.cliente);
+    useEffect(()=>{      
         let v = {
             'nombre': venta.cliente.nombre,
             'apellido': venta.cliente.apellido,
@@ -93,65 +119,69 @@ export default function Dashboard () {
         }
         setCliente(v)
         setCarro(venta.cart)
+        tipos.map((ti)=>{
+            venta.cart.map((prod)=>{
+                if(ti.id == prod.Tipo){
+                    prod.Tipo = ti.Tipo
+                }
+            })
+        })
     },[])
     
 
 
     return(
-        <Box sx={{ width: '80%', display: 'flex', flexDirection: 'column', margin: 'auto', marginTop: '120px', padding: '15px' }} border='solid 0px' boxShadow='5px 2px 15px' >
-                                        <Grid margin='auto' >
-                                            <Typography fontSize={30} >Dashboard</Typography>
-                                        </Grid>
-                                        <Grid>
-                                        <Typography >
-                                            Nombre: {cliente.nombre}
-                                        </Typography>  
-                                        <Typography>
-                                            Apellido: {cliente.apellido}
-                                        </Typography>  
-                                        <Typography>
-                                            Mail: {cliente.mail}
-                                        </Typography>  
-                                        
-                                        </Grid>
-                                        <Grid container direction='column' alignItems='center' >
-                                            <Grid item xs={4} paddingTop={5}>
-                                                <Typography fontSize={20} marginBottom={2} fontFamily={"cursive"} >{venta.id_venta} </Typography>
+        <Card sx={{ width: '70%', display: 'flex', flexDirection: 'column', margin: 'auto', marginTop: '20px', marginBottom: '20px', padding: '15px' }} border='solid 0px' boxShadow='5px 2px 15px' >
+                                        <Grid container direction='column' margin='auto' >
+                                                <Typography margin='auto' variant="h3" component='h3' fontFamily={'fantasy'} >
+                                                    Venta
+                                                </Typography>
+                                                <Typography variant="h5" component='h3' fontFamily={'fantasy'} >
+                                                    Cliente:
+                                                </Typography>
+                                            <Grid container item xs={2} direction='row' margin={2} >
+                                                    <Grid item xs={6}><Typography variant="body1" component='h3'>Nombre: {cliente.nombre}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="body1" component='h3'>Apellido: {cliente.apellido}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="body1" component='h3'>Telefono: {cliente.cel}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="body1" component='h3'>Mail: {cliente.mail}</Typography></Grid>
+                                                    <Grid item xs={6}><Typography variant="body1" component='h3'>direcion:  </Typography></Grid>
                                             </Grid>
-                                            <Grid item xs={6} container direction='row' padding={2} gap={8}
-                                            border='solid 0px' boxShadow='1px' borderRadius={3}>
-                                                {
-                                                venta.cart.map((el, index)=>{ 
-                                                    return <Grid item xs={2} key={index}
-                                                                container direction="column" color='grey.500'>
-                                                                
-                                                                    <Typography paddingTop={3} alignSelf='flex-start'>
-                                                                        Producto: {el.idg} 
-                                                                    </Typography>  
-                                                                    <Typography >
-                                                                        {el.Tipo} 
-                                                                    </Typography> 
-                                                                    <Typography >
-                                                                        Cantidad: {el.cantidad} 
-                                                                    </Typography>
-                                                                    <Typography >
-                                                                        {el.lugar} 
-                                                                    </Typography> 
-                                                                    <Typography >
-                                                                        SubTotal: {el.subTotal}
-                                                                    </Typography>
-                                                        </Grid>
-                                                })
-                                                }
-                                            </Grid>    
+                                            <Grid item xs={2} container direction='row' alignItems='center' >
+                                                <Grid item xs={8} paddingTop={5} paddingBottom={5}>
+                                                    <Typography variant="h5" component='h3' marginBottom={2}>Identificador de Venta:</Typography>
+                                                    <Typography variant="h5" component='h3' marginBottom={2} fontFamily={'fantasy'} >{venta.id_venta}</Typography>
+                                                </Grid>
+                                                <Grid container item xs={12} direction='row' gap={2} paddingBottom={2} >
+                                                    <Grid item xs={2} ><Typography variant="body1" component='h3'>Tipo</Typography></Grid>
+                                                    <Grid item xs={2}><Typography variant="body1" component='h3'>ID</Typography></Grid>
+                                                    <Grid item xs={2}><Typography variant="body1" component='h3'>Cantidad</Typography></Grid>
+                                                    <Grid item xs={2}><Typography variant="body1" component='h3'>Lugar</Typography></Grid>
+                                                    <Grid item xs={2}><Typography variant="body1" component='h3'>SubTotal</Typography></Grid>
+                                                    
+                                                </Grid>
+                                                <Grid container item xs={12} direction='row' gap={2}>
+                                                    {
+                                                    venta.cart.map((el, index)=>{ 
+                                                        return <Grid item xs={12} key={index}
+                                                                    container direction="row" color='grey.500' gap={2} > 
+                                                                        <Grid item xs={2}><Typography variant="body1" component='h3'>{el.Tipo}</Typography></Grid>
+                                                                        <Grid item xs={2}><Typography variant="body1" component='h3'>{el.idg} </Typography></Grid>
+                                                                        <Grid item xs={2}><Typography variant="body1" component='h3'>{el.cantidad}</Typography></Grid>
+                                                                        <Grid item xs={2}><Typography variant="body1" component='h3'>{el.lugar}</Typography></Grid>
+                                                                        <Grid item xs={2}><Typography variant="body1" component='h3'>{el.subTotal}</Typography></Grid>
+                                                            </Grid>
+                                                    })
+                                                    }
+                                                </Grid>    
+                                            </Grid>
                                         </Grid>
-                                        <Grid container padding={2} direction='row' width='100%' >
-                                            <Grid item xs={2}>
-                                                <Typography fontSize={20} >
+                                        <Grid container padding={2} direction='row' width='100%' marginTop={5} >
+                                            <Grid item xs={4}>
+                                                <Typography variant="h5" component='h3' >
                                                     Total: ${venta.total}
                                                 </Typography>
                                                 <Link to = '/' >
-                                                    <Button>volver</Button>
+                                                    <Button>cancelar</Button>
                                                 </Link>
                                             </Grid>
                                             <Box sx={{ flexGrow: 5 }} />
@@ -209,6 +239,6 @@ export default function Dashboard () {
                                             </Grid>
                                             
                                         </Grid>
-                                        </Box> 
+                                        </Card> 
     )
 }

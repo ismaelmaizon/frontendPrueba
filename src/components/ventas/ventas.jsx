@@ -28,12 +28,13 @@ export default function Ventas() {
 
     const columns = [
         { field: 'col0', headerName: 'id_venta', width: 150 },
-        { field: 'col1', headerName: 'Fecha', width: 150 },
-        { field: 'col2', headerName: 'Nombre', width: 150 },
-        { field: 'col3', headerName: 'Apellido', width: 150 },
-        { field: 'col4', headerName: 'Mail', width: 150 },
+        { field: 'col1', headerName: 'Fecha', width: 180 },
+        { field: 'col2', headerName: 'Nombre', width: 100 },
+        { field: 'col3', headerName: 'Apellido', width: 100 },
+        { field: 'col4', headerName: 'Mail', width: 180 },
         { field: 'col5', headerName: 'Cel', width: 150 },
-        { field: 'col6', headerName: 'Total', width: 150 }
+        { field: 'col6', headerName: 'Total $', width: 150 },
+        { field: 'col7', headerName: 'Estado', width: 150 },
     ]
 
     //modificar vista
@@ -65,7 +66,8 @@ export default function Ventas() {
                 col3: cliente.apellido,
                 col4: cliente.mail,
                 col5: cliente.cel,
-                col6: cliente.total
+                col6: cliente.total,
+                col7: cliente.estado
             }
             vents.push(newCliente)
             ids.push(id)

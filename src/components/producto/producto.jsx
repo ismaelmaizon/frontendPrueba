@@ -13,10 +13,11 @@ export default function Producto() {
         tipos,
         producto,
         getUbiProducto, setUbi,
-        setIdg, alert, getProductoimg, setImgs
+        setIdg, alert, getProductoIms, setImgs
     } = useContext(MiContexto)
     const router = useNavigate()
     const [ prod, setProd ] = useState({})
+
 
     useEffect(()=>{
         tipos.map((ti)=>{
@@ -44,7 +45,7 @@ export default function Producto() {
 
     return (
         <div>
-            {producto.length == 0 ? <div></div> : <Card sx={{ maxWidth: 1000, margin: 'auto', marginTop: '25px', boxShadow: '2px 2px 10px 2px'  }}>
+            {producto.length == 0 ? <div></div> : <Card sx={{margin: 'auto', marginTop: '25px', maxWidth: '1000px'  }}>
                     <Grid container direction='row' alignItems='center' style={{ maxWidth: '600px', margin: 'auto' }} >
                             <Grid item xs={6} container>
                                 <CardContent>
@@ -86,18 +87,20 @@ export default function Producto() {
                                 </Grid>
                                 <Grid item xs={6}>
                                         <Button size="small" color="info" variant="contained" onClick={async ()=>{ 
-                                            const res = await getProductoimg(producto.IdGenerate) 
+                                            const res = await getProductoIms(producto.IdGenerate) 
                                             setImgs(res) 
+                                            console.log(res);
+                                            
                                             if (res) {
                                                 router('/detalle')
                                             }
                                             }} >detalle</Button>
                                 </Grid>
                             </Grid>
-                    </Grid> 
-                    <Grid >
-                        <Ubiproducto/>
                     </Grid>
+                    <Grid  >
+                        <Ubiproducto />
+                    </Grid> 
                 </Card>
              } 
     </div>)}

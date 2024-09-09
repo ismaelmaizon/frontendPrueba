@@ -130,21 +130,6 @@ const CartProvider = ( { children } ) => {
         }
       
   }
-  //obtener imagenes del producto
-  const [imgs, setImgs] = useState([])
-  const getProductoimg = async (id) =>{
-    try {
-        const response = await fetch(`http://${URL}/api/productos/productoimg/${id}`)
-        if (!response.ok) {
-          throw new Error('problemas al consultar en la navegacion');
-        }
-        const data = await response.json();
-        return data
-      } catch (error) {
-        console.error('problemas con la consulta:', error);
-      }
-    
-}
   //obtener ubicacion de productos
   const [productoUbi, setProductoUbi] = useState([])
   const [infoprod, setInfoprod] = useState([])
@@ -174,6 +159,7 @@ const CartProvider = ( { children } ) => {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
+          setProductsLug(data.response)
           return data.response
         } catch (error) {
           console.error('problemas con la consulta:', error);
@@ -219,6 +205,45 @@ const CartProvider = ( { children } ) => {
         console.error('There was a problem with the fetch operation:', error);
         
     }
+  }
+  //agregar imagen a producto
+  const addimgProduct = async ( id, file ) =>{
+    console.log(id);
+    console.log(file);
+      try {
+        const formData = new FormData();
+        formData.append('file',file); // 'archivo' debe ser el archivo que deseas enviar
+        formData.append('id', JSON.stringify(id)); // Puedes agregar otros datos como un JSON stringificado
+
+        const response = await fetch(`http://${URL}/api/productos/addimgProduct`, {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+        
+    }
+  }
+  //obtener imagenes del producto
+  const [imgs, setImgs] = useState([])
+  const getProductoIms = async (id) =>{
+    try {
+      const response = await fetch(`http://${URL}/api/productos/productoimg/${id}`)
+          if (!response.ok) {
+            throw new Error('problemas al consultar en la navegacion');
+          }
+          const data = await response.json();
+          console.log(data);
+          
+          return data
+        } catch (error) {
+          console.error('problemas con la consulta:', error);
+        }
+        
   }
   //eliminar producto
   const deleteProducto = async (id) => {
@@ -343,8 +368,7 @@ const CartProvider = ( { children } ) => {
 
     const filterByLugar = async (lug) => {
         const response = await getProductosLugar(lug);
-        setProductsLug(response);
-        productsLug.forEach(prodlug => {
+        response.forEach(prodlug => {
             productos.forEach(prod => {
                 if (prodlug.id_producto === prod.id) addProduct(prod);
             });
@@ -412,7 +436,7 @@ const CartProvider = ( { children } ) => {
         });
     }
 
-    setRows(prods);
+    return prods
   };
   
   const [cart, setCart] = useState([])
@@ -458,6 +482,7 @@ const CartProvider = ( { children } ) => {
   //obtener venta
   const [idv, setIdv] = useState('')
   const [ventainf, setVentainf] = useState([])
+  const [ventainfProds, setVentainfProds] = useState([])
   const getVenta = async (id) =>{
       try {
           const response = await fetch(`http://${URL}/api/ventas/getVentaId/${id}`)
@@ -465,8 +490,11 @@ const CartProvider = ( { children } ) => {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
-          setIdv(data.id_venta)
-          setVentainf(data)
+          setIdv(data.venta[0].id_venta)
+          setVentainf(data.venta[0])
+          setVentainfProds(data.productos)
+          console.log(data);
+          
           return data
         } catch (error) {
           console.error('problemas con la consulta:', error);
@@ -636,10 +664,10 @@ const alert = async (status) =>{
 
         vprod, setVprod, vent, setVent,
         
-        createProducto, deleteProducto,
+        createProducto, deleteProducto, addimgProduct,
         productos, setProductos, getProductos,
         producto, setProducto, getProducto, idg, setIdg,
-        getProductoimg, imgs, setImgs,
+        getProductoIms, imgs, setImgs,
         productoUbi, setProductoUbi, getUbiProducto, infoprod, setInfoprod,
         updateStockProduct,
         getProductosLugar, productsLug, setProductsLug,
@@ -657,7 +685,7 @@ const alert = async (status) =>{
         idv, setIdv,
         
         getVentas, ventas, setVentas,
-        getVenta ,ventainf, setVentainf,
+        getVenta ,ventainf, setVentainf, ventainfProds, setVentainfProds,
         refresh, refreshVenta,
         alert
       }} >

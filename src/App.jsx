@@ -35,7 +35,7 @@ function App() {
             </div>
             <div>
               <Routes>
-                <Route element={<Inicio/>} path='/' ></Route>
+                <Route element={<Inicio/>} path='/inicio' ></Route>
                 <Route element={<AddProducto/>} path='/addproducto' ></Route>
                 <Route element={<AddTipo/>} path='/addtipo' ></Route>
                 <Route element={<AddLugar/>} path='/addlugar' ></Route>
