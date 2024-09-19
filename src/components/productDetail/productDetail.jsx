@@ -11,10 +11,11 @@ import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
 import CircularProgress from '@mui/material/CircularProgress';
 import ArrowLeftRoundedIcon from '@mui/icons-material/ArrowLeftRounded';
 import ArrowRightRoundedIcon from '@mui/icons-material/ArrowRightRounded';
+import NavBar from "../navbar/navBar";
 
 export default function PorductDetail() {
     const {
-        alert,
+        alert, view,
         tipos,
         producto,
         deleteProducto, imgs, addimgProduct, getProductoIms, setImgs
@@ -86,6 +87,7 @@ export default function PorductDetail() {
 
     return (
         <div>
+            <NavBar/>
             {producto.length == 0 || load  ? <Box sx={{ display: 'flex', marginTop: '150px' }}><CircularProgress sx={{ display: 'flex', margin: 'auto'}}  /></Box> : <Card sx={{maxWidth: 800, margin: 'auto', marginTop: '25px', padding: 2 }}>
                 <Grid container direction='row' >
                     <Grid item xs={6} direction='row' alignItems='center'>
@@ -109,60 +111,63 @@ export default function PorductDetail() {
                             </CardContent>
                             <CardActions>
                                 <Box component='form' onSubmit={handleSubmit} encType="multipart/form-data" >
-                                    <Box sx={{
-                                        color: 'white',
-                                        display: 'inline-block',
-                                        backgroundColor: '#035584',  
-                                        border: 'solid 0px',
-                                        marginBottom: '5px',
-                                        height: '30px',
-
-                                        }} >
-                                        <input  
-                                                style={{
-                                                    position: 'relative',
-                                                    opacity: 0.7,
-                                                    height: '50px',
-                                                    padding: '5px',
+                                    {view == 'view' ? <div>
+                                        <Box sx={{
+                                                color: 'white',
+                                                display: 'inline-block',
+                                                backgroundColor: '#035584',  
+                                                border: 'solid 0px',
+                                                marginBottom: '5px',
+                                                height: '30px',
+        
+                                                }} >
+                                                <input  
+                                                        style={{
+                                                            position: 'relative',
+                                                            opacity: 0.7,
+                                                            height: '50px',
+                                                            padding: '5px',
+                                                        }}
+                                                        type="file" 
+                                                        accept=".jpg, .jpeg, .png" 
+                                                        onChange={handleFileChange} 
+                                                        placeholder="ingresa imagen"
+                                                    />
+                                            </Box>
+                                            <Button type="submit" size="small" color="success" variant="contained" sx={{ width: '170px' }} endIcon={<BackupRoundedIcon/>} 
+                                                onClick={ async ()=>{
+                                                    setLoad(true)
+                                                    const res1 = await addimgProduct(producto.IdGenerate, file)
+                                                    const res2 = await getProductoIms(producto.IdGenerate) 
+                                                    console.log(res1);
+                                                    console.log(res2);
+                                                    if(res1 && res2){
+                                                        setImgs(res2)
+                                                        setLoad(false)
+                                                        alert('success')
+                                                    }else{
+                                                        alert('error')
+                                                    }
                                                 }}
-                                                type="file" 
-                                                accept=".jpg, .jpeg, .png" 
-                                                onChange={handleFileChange} 
-                                                placeholder="ingresa imagen"
-                                            />
-                                    </Box>
-                                    <Button type="submit" size="small" color="success" variant="contained" sx={{ width: '170px' }} endIcon={<BackupRoundedIcon/>} 
-                                        onClick={ async ()=>{
-                                            setLoad(true)
-                                            const res1 = await addimgProduct(producto.IdGenerate, file)
-                                            const res2 = await getProductoIms(producto.IdGenerate) 
-                                            console.log(res1);
-                                            console.log(res2);
-                                            if(res1 && res2){
-                                                setImgs(res2)
-                                                setLoad(false)
-                                                alert('success')
-                                            }else{
-                                                alert('error')
-                                            }
-                                        }}
-                                        >
-                                            update
-                                    </Button>
+                                                >
+                                                    update
+                                            </Button>
+                                    </div>  : <div>user</div> }
                                 </Box>
                             </CardActions>
                         </Grid>
                         <Grid item xs={16} margin={1}  >
-                            <Link to='/' >
+                            <Link to='/inicio' >
                                 <Button size="small" color="info" variant="contained" sx={{marginRight: '5px'}} >volver</Button>
                             </Link>   
-                            <Button size="small" color="info" variant="contained" sx={{marginLeft: '5px'}} onClick={ async ()=>{
+                            {view == 'admin' ?  <Button size="small" color="info" variant="contained" sx={{marginLeft: '5px'}} onClick={ async ()=>{
                                     console.log(producto.id);
                                     let res = await deleteProducto(producto.id)
                                     console.log(res);
-                                    res.ok ? (alert('success'), router('/') ) : alert('error')
+                                    res.ok ? (alert('success'), router('/inicio') ) : alert('error')
                                     
-                                }} >eliminar</Button>
+                                }} >eliminar</Button> : <div></div>
+                            }
                         </Grid>
                     </Grid>
                     <Grid container item xs={6} direction='row'>

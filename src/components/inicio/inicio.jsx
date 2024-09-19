@@ -1,7 +1,8 @@
 
 import { useContext, useEffect} from "react"
 import { MiContexto } from "../context/context"
-
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 //lugares
 import {Button} from '@mui/material';
 //productos
@@ -11,14 +12,19 @@ import Productos from "../productos/productos";
 import Ventas from "../ventas/ventas";
 import Producto from "../producto/producto";
 import Venta from "../venta/venta";
+import NavBar from "../navbar/navBar";
 
 export default function Inicio() {
     const {
+        getCookie, setview,
+        getEstados,
         getTipos,
         vprod, setVprod, vent, setVent,
         getProductos, getVentas, getLugares,
-        productoUbi, lugares, setInfoprod
+        productoUbi, lugares, setInfoprod, 
     } = useContext(MiContexto)
+
+    const router = useNavigate()
 
     useEffect(()=>{        
         let info = []
@@ -33,17 +39,19 @@ export default function Inicio() {
         setInfoprod(info)    
         console.log(vprod);
         console.log(vent);
-        
+        // Usar la función para obtener una cookie llamada "miCookie"
+        const userView = getCookie('_UrB');
+        setview(userView)
+                
     }, [])
-
-
 
     return (
         <div>
+            <NavBar/>
             {
                vprod || vent ? ( (vprod ? ( <div>
                 <div>
-                <Producto/>
+                    <Producto/>
                 </div> 
                 <div style={{ width: '100%', marginTop: '50px' }}><Productos/></div> 
                </div> 
@@ -57,15 +65,45 @@ export default function Inicio() {
                 ) ) ) 
                : <div style={{ display: 'flex', marginTop: '45px' }} >
                    <Button variant="contained" size="large" style={{ margin: 'auto', backgroundColor: '#ab47bc' }} onClick={ async ()=>{ 
-                       await getProductos() 
-                       await getLugares()
-                       await getTipos()
-                       setVprod(true)}} >Productos</Button>
+                       let res = await getProductos()
+                       console.log(res);
+                       if(res.status == 401){      
+                        console.log(res.status);
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "su session expiro",
+                            showConfirmButton: false,
+                            timer: 1500
+                          });
+                        router('/')
+                        }else{
+                            await getEstados()
+                            await getLugares()
+                            await getTipos()
+                            setVprod(true) 
+                        }}
+                       }
+                        >Productos</Button>
                    <Button variant="contained" size="large" style={{ margin: 'auto', backgroundColor: '#ab47bc' }} onClick={ async ()=>{ 
-                       await getVentas() 
-                       await getLugares() 
-                       await getTipos()
-                       setVent(true)}} >Ventas</Button>
+                       let res = await getVentas()
+                       if(res.status == 401){
+                            console.log(res.status);
+                            Swal.fire({
+                                position: "center",
+                                icon: "error",
+                                title: "su session expiro",
+                                showConfirmButton: false,
+                                timer: 1500
+                              });
+                            router('/')
+                        }else{
+                            await getEstados()
+                            await getLugares()
+                            await getTipos()
+                            setVent(true) 
+                        }
+                       }} >Ventas</Button>
                </div>
             }
             </div>

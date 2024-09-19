@@ -2,6 +2,7 @@ import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/materia
 import { useContext, useEffect, useState } from "react";
 import { MiContexto } from "../context/context";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../navbar/navBar";
 
 
 
@@ -61,6 +62,8 @@ export default function AddProductLug () {
 
 
     return(
+        <div>
+        <NavBar/>
         <Box sx={{ width: '60%', margin: 'auto', marginTop: '120px', padding: '15px', boxShadow: '2px 2px 10px 2px' }} >
             <Typography variant="h4" gutterBottom sx={{ width:'300px', margin: 'auto' }} paddingBottom={3} >
                 Ubicar Producto:
@@ -104,17 +107,18 @@ export default function AddProductLug () {
                             let res = await insertProdLug(data)
                             await updateStockProduct(idg)
                             await getProductos()
-                            res ? (alert('success'), refresh(), router('/') ) : alert('error')
+                            res ? (alert('success'), refresh(), router('/inicio') ) : alert('error')
                         }} >crear</Button>
                     </Grid>
                     <Grid item xs={6}  >
                         <Button type="submit" variant="contained" size="small" sx={{ width:'200px'}} onClick={()=>{
                             refresh()
-                            router('/')
+                            router('/inicio')
                         }}>volver</Button>
                     </Grid>
                 </Grid>
             </Box>
         </Box>
+        </div>
     )
 }

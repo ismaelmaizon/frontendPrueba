@@ -2,6 +2,7 @@ import { Box, Button, Grid, MenuItem, TextField, Typography } from "@mui/materia
 import { useContext, useState } from "react";
 import { MiContexto } from "../context/context";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../navbar/navBar";
 
 
 
@@ -47,6 +48,8 @@ export default function AddProducto () {
 
 
     return(
+        <div>
+        <NavBar/>
         <Box sx={{ width: '60%', margin: 'auto', marginTop: '120px', padding: '15px', boxShadow: '2px 2px 10px 2px' }}  >
             <Typography variant="h4" gutterBottom sx={{ width:'300px', margin: 'auto' }} >
                 Nuevo producto
@@ -108,7 +111,7 @@ export default function AddProducto () {
                 console.log(respon.status);
                 if (respon.status == 200) {
                     await alert('success')
-                    router('/')
+                    router('/inicio')
                 } else if (respon.status == 201){
                     await alert('errorCreate')
                 } else {
@@ -118,5 +121,6 @@ export default function AddProducto () {
             }}>crear</Button>
             </Box>
         </Box>
+        </div>
     )
 }

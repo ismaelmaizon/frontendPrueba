@@ -21,7 +21,7 @@ export default function Venta() {
         <div>
             {ventainf.length == 0 ? <div></div> : <Card sx={{ width: '1000px', margin: 'auto', marginTop: '25px', boxShadow: '2px 2px 10px 2px'  }}>
                     <Grid container direction='column' margin={3}>
-                        <Typography margin='auto' variant="h4" component="div">
+                        <Typography margin='auto' variant="h4" width={450} component="div">
                         Informacion de Venta 
                         </Typography>
                         <Typography  variant="h6" >
@@ -58,7 +58,7 @@ export default function Venta() {
                         </Grid>     
                     </Grid>
                     <CardActions  >
-                        <Link to='/'>
+                        <Link to='/updateVenta'>
                             <Button size="small" color="info" variant="contained">modificar</Button>
                         </Link>
                         <Link to='/'>

@@ -4,6 +4,7 @@ import { MiContexto } from "../context/context";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import NavBar from "../navbar/navBar";
 
 
 
@@ -90,6 +91,7 @@ export default function Preview () {
 
     return(
         <div>
+            <NavBar/>
             {
                 cart.length == 0 ? <Typography> El carrito se encuentra vacio </Typography> : 
             
@@ -153,7 +155,7 @@ export default function Preview () {
                                                 <Typography fontSize={20} >
                                                     Total: ${total}
                                                 </Typography>
-                                                <Link to = '/' >
+                                                <Link to = '/inicio' >
                                                     <Button>volver</Button>
                                                 </Link>
                                             </Grid>

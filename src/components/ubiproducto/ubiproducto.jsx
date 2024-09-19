@@ -11,6 +11,7 @@ import Swal from 'sweetalert2'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import clases from './ubiproducto.module.css'
 
 export default function Ubiproducto() {
     const {
@@ -41,11 +42,11 @@ export default function Ubiproducto() {
     return (
         <div>
             {
-             !ubi ? <div></div> : <div style={{ display: 'flex', margin: 'auto', padding: '15px' }} >{
+             !ubi ? <div></div> : <div className={clases.ubi} >{
                 infoprod.map((prod, index)=>{
                             console.log(prod);
-                            return (
-                                    <Grid key={index} container direction="row" padding={1} boxShadow='1px 1px 5px 1px' sx={{ maxWidth: '200px', margin: 'auto' }} > 
+                            return (<div key={index} className={clases.ubi2} >
+                                    <Grid container direction="row" padding={1} boxShadow='1px 1px 5px 1px' sx={{maxWidth: '200px' }} > 
                                         <Grid item xs={6} > 
                                             <CardContent sx={ { display: 'flex', flexDirection: 'column', alignItems: 'center'  } } >
                                                 <p style={{ margin: '1px', fontSize: 15, fontWeight: 'bold' }}>
@@ -56,7 +57,7 @@ export default function Ubiproducto() {
                                                 </p>
                                             </CardContent>
                                         </Grid>
-                                        <Grid container item xs={6} direction="row" justifyContent='space-evenly' alignContent='flex-end' >
+                                        <Grid container item xs={6} paddingRight={2} direction="row" justifyContent='space-evenly' alignContent='flex-end' >
                                             <Grid item xs={8} marginBottom={1} >
                                                 <Link to='/updateproductLug' >
                                                     <Button size="small" color="secondary" variant="contained"  onClick={()=>{
@@ -119,6 +120,7 @@ export default function Ubiproducto() {
                                             </Grid>
                                         </Grid>
                                     </Grid>
+                                    </div>
                                     )
                         })
                 } </div>   

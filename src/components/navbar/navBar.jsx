@@ -83,7 +83,7 @@ export default function NavBar() {
                 </Drawer>
               </Fragment>
           </div>
-          <Link to='/' >
+          <Link to='/inicio' >
             <Typography
               variant="h6"
               noWrap

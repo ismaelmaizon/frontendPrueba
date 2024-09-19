@@ -2,6 +2,7 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { MiContexto } from "../context/context";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../navbar/navBar";
 
 
 
@@ -29,6 +30,8 @@ export default function AddTipo () {
 
 
     return(
+        <div>
+        <NavBar/>
         <Box sx={{ width: '60%', margin: 'auto', marginTop: '120px', padding: '15px', boxShadow: '2px 2px 10px 2px' }} >
             <Typography variant="h4" gutterBottom sx={{ width:'300px', margin: 'auto' }}  >
                 Agregar nuevo tipo
@@ -51,18 +54,19 @@ export default function AddTipo () {
                         if (respon.status == 200) {
                             await getTipos()
                             await alert('success')
-                            router('/')
+                            router('/inicio')
                         }
                     }}  >crear</Button>
                     </Grid>
                     <Grid item xs={6}  >
                         <Button type="submit" variant="contained" size="small" sx={{ width:'200px'}} onClick={()=>{
                             refresh()
-                            router('/')
+                            router('/inicio')
                         }}>volver</Button>
                     </Grid>
                 </Grid>
             </Box>
         </Box>
+        </div>
     )
 }

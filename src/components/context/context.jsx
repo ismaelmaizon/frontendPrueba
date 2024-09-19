@@ -10,10 +10,53 @@ export const MiContexto = createContext([])
 
 const URL = import.meta.env.VITE_BACKEND_URL
 
+
+
 const CartProvider = ( { children } ) => {
   //vista
   const [vprod, setVprod] = useState(false)
   const [vent, setVent] = useState(false)
+  
+  //get cookie
+  const [view, setview] = useState('')
+  const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        return parts.pop().split(';').shift();
+    }
+    return null;
+  }
+  //obtener estados
+  const [estados, setEstados] = useState([])
+  const getEstados = async () =>{
+    try {
+        const response = await fetch(`http://${URL}/api/estados/getEstados`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        })
+        // Manejo de respuestas no autorizadas
+        if (response.status === 401) {
+          console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+          // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+          return { status: 401, message: 'No autorizado' };
+        }
+        if (!response.ok) {
+          throw new Error('problemas al consultar en la navegacion');
+        }
+        const data = await response.json();
+        setEstados(data.response)
+        console.log(data.response);
+        
+      } catch (error) {
+        let response = { status: 500 }
+        console.error('problemas con la consulta:', error);
+        return response          
+      }
+  }
 
   //crear tipo
   //const [prodCreado, setPructoCreado] = useState(false)
@@ -28,35 +71,55 @@ const CartProvider = ( { children } ) => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(tipo)
+          body: JSON.stringify(tipo),
+          credentials: 'include'
         });
+        // Manejo de respuestas no autorizadas
+        if (response.status === 401) {
+          console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+          // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+          return { status: 401, message: 'No autorizado' };
+        }
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-        
         return response
       } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        
+        let response = { status: 500 }
+        console.error('problemas con la consulta:', error);
+        return response          
     }
   }
 
   //obtener tipos
   const [tipos, setTipos] = useState([])
   const getTipos = async () =>{
-      try {
-          const response = await fetch(`http://${URL}/api/tipos/getTipos`)
-          if (!response.ok) {
-            throw new Error('problemas al consultar en la navegacion');
-          }
-          const data = await response.json();
-          setTipos(data.response)
-          console.log(data.response);
-          
-        } catch (error) {
-          console.error('problemas con la consulta:', error);
+    try {
+        const response = await fetch(`http://${URL}/api/tipos/getTipos`,{
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        })
+        // Manejo de respuestas no autorizadas
+        if (response.status === 401) {
+          console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+          // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+          return { status: 401, message: 'No autorizado' };
         }
-      
+        if (!response.ok) {
+          throw new Error('problemas al consultar en la navegacion');
+        }
+        const data = await response.json();
+        setTipos(data.response)
+        console.log(data.response);
+        
+      } catch (error) {
+        let response = { status: 500 }
+        console.error('problemas con la consulta:', error);
+        return response          
+      }
   }
   //crear nuevo lugar
   const createLugar = async (data) =>{
@@ -69,22 +132,42 @@ const CartProvider = ( { children } ) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(lugar)
+        body: JSON.stringify(lugar),credentials: 'include'
       });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       
       return response
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response    
     } 
   }
   //obtener lugares
   const [lugares, setLugares] = useState([])
   const getLugares = async () =>{
       try {
-          const response = await fetch(`http://${URL}/api/lugares/lugares`)
+          const response = await fetch(`http://${URL}/api/lugares/lugares`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          })
+          // Manejo de respuestas no autorizadas
+          if (response.status === 401) {
+            console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+            // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+            return { status: 401, message: 'No autorizado' };
+          }
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -93,23 +176,41 @@ const CartProvider = ( { children } ) => {
           console.log(data.response);
           
         } catch (error) {
+          let response = { status: 500 }
           console.error('problemas con la consulta:', error);
+          return response            
         }
-      
-  }
+    }
 
   //obtener productos
   const [productos, setProductos] = useState([])
   const getProductos = async () =>{
       try {
-          const response = await fetch(`http://${URL}/api/productos/productos`)
+          const response = await fetch(`http://${URL}/api/productos/productos`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          });
+
+           // Manejo de respuestas no autorizadas
+          if (response.status === 401) {
+            console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+            // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+            return { status: 401, message: 'No autorizado' };
+          }
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
           setProductos(data.response)
+              
+          return response
         } catch (error) {
+          let response = { status: 500 }
           console.error('problemas con la consulta:', error);
+          return response        
         }
       
   }
@@ -118,7 +219,19 @@ const CartProvider = ( { children } ) => {
   const [producto, setProducto] = useState([])
   const getProducto = async (id) =>{
       try {
-          const response = await fetch(`http://${URL}/api/productos/producto/${id}`)
+          const response = await fetch(`http://${URL}/api/productos/producto/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          })
+          // Manejo de respuestas no autorizadas
+          if (response.status === 401) {
+            console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+            // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+            return { status: 401, message: 'No autorizado' };
+          }
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -126,7 +239,9 @@ const CartProvider = ( { children } ) => {
           setIdg(data.IdGenerate)
           return data
         } catch (error) {
+          let response = { status: 500 }
           console.error('problemas con la consulta:', error);
+          return response             
         }
       
   }
@@ -135,7 +250,19 @@ const CartProvider = ( { children } ) => {
   const [infoprod, setInfoprod] = useState([])
   const getUbiProducto = async (id) =>{
     try {
-        const response = await fetch(`http://${URL}/api/lugaresProd/getUbicacionProducto/${id}`)
+        const response = await fetch(`http://${URL}/api/lugaresProd/getUbicacionProducto/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        })
+        // Manejo de respuestas no autorizadas
+        if (response.status === 401) {
+          console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+          // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+          return { status: 401, message: 'No autorizado' };
+        }
         if (!response.ok) {
           throw new Error('problemas al consultar en la navegacion');
         }
@@ -147,14 +274,28 @@ const CartProvider = ( { children } ) => {
           return data.response
         }
       } catch (error) {
+        let response = { status: 500 }
         console.error('problemas con la consulta:', error);
+        return response                   
       }
   }
   //obtener productos de un lugar
   const [productsLug, setProductsLug] = useState([])
   const getProductosLugar = async (id) =>{
     try {
-      const response = await fetch(`http://${URL}/api/lugaresProd/getProductosLugar/${id}`)
+          const response = await fetch(`http://${URL}/api/lugaresProd/getProductosLugar/${id}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+          })
+          // Manejo de respuestas no autorizadas
+          if (response.status === 401) {
+            console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+            // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+            return { status: 401, message: 'No autorizado' };
+          }
           if (!response.ok) {
             throw new Error('problemas al consultar en la navegacion');
           }
@@ -162,9 +303,10 @@ const CartProvider = ( { children } ) => {
           setProductsLug(data.response)
           return data.response
         } catch (error) {
+          let response = { status: 500 }
           console.error('problemas con la consulta:', error);
+          return response           
         }
-        
   }
   //crear producto
   //const [prodCreado, setPructoCreado] = useState(false)
@@ -186,64 +328,92 @@ const CartProvider = ( { children } ) => {
     console.log(data);
     console.log(prod);
     
-      try {
-        const formData = new FormData();
-        formData.append('file',file); // 'archivo' debe ser el archivo que deseas enviar
-        formData.append('prod', JSON.stringify(prod)); // Puedes agregar otros datos como un JSON stringificado
+    try {
+      const formData = new FormData();
+      formData.append('file',file); // 'archivo' debe ser el archivo que deseas enviar
+      formData.append('prod', JSON.stringify(prod)); // Puedes agregar otros datos como un JSON stringificado
 
-        const response = await fetch(`http://${URL}/api/productos/producto`, {
-          method: 'POST',
-
-          body: formData
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        setVprod(false)
-        return response
-      } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        
+      const response = await fetch(`http://${URL}/api/productos/producto`, {
+        method: 'POST',
+        body: formData, 
+        credentials: 'include'
+      });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      setVprod(false)
+      return response
+    } catch (error) {
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response 
     }
   }
   //agregar imagen a producto
   const addimgProduct = async ( id, file ) =>{
     console.log(id);
     console.log(file);
-      try {
-        const formData = new FormData();
-        formData.append('file',file); // 'archivo' debe ser el archivo que deseas enviar
-        formData.append('id', JSON.stringify(id)); // Puedes agregar otros datos como un JSON stringificado
+    try {
+      const formData = new FormData();
+      formData.append('file',file); // 'archivo' debe ser el archivo que deseas enviar
+      formData.append('id', JSON.stringify(id)); // Puedes agregar otros datos como un JSON stringificado
 
-        const response = await fetch(`http://${URL}/api/productos/addimgProduct`, {
-          method: 'POST',
-          body: formData
-        });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response
-      } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-        
+      const response = await fetch(`http://${URL}/api/productos/addimgProduct`, {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response
+    } catch (error) {
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response 
     }
   }
   //obtener imagenes del producto
   const [imgs, setImgs] = useState([])
   const getProductoIms = async (id) =>{
     try {
-      const response = await fetch(`http://${URL}/api/productos/productoimg/${id}`)
-          if (!response.ok) {
-            throw new Error('problemas al consultar en la navegacion');
-          }
-          const data = await response.json();
-          console.log(data);
-          
-          return data
-        } catch (error) {
-          console.error('problemas con la consulta:', error);
-        }
-        
+      const response = await fetch(`http://${URL}/api/productos/productoimg/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      })
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
+      if (!response.ok) {
+        throw new Error('problemas al consultar en la navegacion');
+      }
+      const data = await response.json();
+      console.log(data);
+      
+      return data
+      } catch (error) {
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response     
+    }  
   }
   //eliminar producto
   const deleteProducto = async (id) => {
@@ -252,8 +422,14 @@ const CartProvider = ( { children } ) => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },credentials: 'include'
       });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -261,9 +437,10 @@ const CartProvider = ( { children } ) => {
       
       return response
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      
-  }
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response  
+    }
   }
 
   //añadir producto a un lugar
@@ -279,16 +456,23 @@ const CartProvider = ( { children } ) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(info)
+        body: JSON.stringify(info), credentials: 'include'
       });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       return response
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      
-  }
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response  
+    }
   }
 
   //actulizar producto en un lugar
@@ -305,8 +489,14 @@ const CartProvider = ( { children } ) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(info)
+        body: JSON.stringify(info), credentials: 'include'
       });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -316,8 +506,10 @@ const CartProvider = ( { children } ) => {
       } 
       return response
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-  }
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response  
+    }
   }
 
   //actualizar stock del producto
@@ -327,17 +519,24 @@ const CartProvider = ( { children } ) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
-        },
+        }, credentials: 'include'
       });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       console.log(response);
       return response
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      
-  }
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response  
+    }
   }
 
   // Filtro productos
@@ -454,29 +653,53 @@ const CartProvider = ( { children } ) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(venta)
+        body: JSON.stringify(venta), credentials: 'include'
       });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       return response.json()
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response  
     }
   }
   //obtener ventas
   const [ventas, setVentas] = useState([])
   const getVentas = async () =>{
     try {
-        const response = await fetch(`http://${URL}/api/ventas/getVentas`)
-        if (!response.ok) {
-          throw new Error('problemas al consultar en la navegacion');
+        const response = await fetch(`http://${URL}/api/ventas/getVentas`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        })
+         // Manejo de respuestas no autorizadas
+        if (response.status === 401) {
+          console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+          // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+          return { status: 401, message: 'No autorizado' };
         }
+
+        if (!response.ok) {
+          throw new Error('Problemas al consultar en la navegación');
+        }
+
         const data = await response.json();
-        setVentas(data.response)
+        setVentas(data.response);  // Asignar los datos a tu estado
+        return data;
       } catch (error) {
+        let response = { status: 500 }
         console.error('problemas con la consulta:', error);
+        return response
       }
   }
   //obtener venta
@@ -484,21 +707,35 @@ const CartProvider = ( { children } ) => {
   const [ventainf, setVentainf] = useState([])
   const [ventainfProds, setVentainfProds] = useState([])
   const getVenta = async (id) =>{
-      try {
-          const response = await fetch(`http://${URL}/api/ventas/getVentaId/${id}`)
-          if (!response.ok) {
-            throw new Error('problemas al consultar en la navegacion');
-          }
-          const data = await response.json();
-          setIdv(data.venta[0].id_venta)
-          setVentainf(data.venta[0])
-          setVentainfProds(data.productos)
-          console.log(data);
-          
-          return data
-        } catch (error) {
-          console.error('problemas con la consulta:', error);
+    try {
+        const response = await fetch(`http://${URL}/api/ventas/getVentaId/${id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        })
+        // Manejo de respuestas no autorizadas
+        if (response.status === 401) {
+          console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+          // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+          return { status: 401, message: 'No autorizado' };
         }
+        if (!response.ok) {
+          throw new Error('problemas al consultar en la navegacion');
+        }
+        const data = await response.json();
+        setIdv(data.venta[0].id_venta)
+        setVentainf(data.venta[0])
+        setVentainfProds(data.productos)
+        console.log(data);
+        
+        return data
+      } catch (error) {
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response
+    }
       
   }
 
@@ -511,16 +748,73 @@ const CartProvider = ( { children } ) => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data), credentials: 'include'
       });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       console.log(response.status);
       return response
     } catch (error) {
-      console.error('There was a problem with the fetch operation:', error);
-      
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response
+    }
+  }
+
+  //update de venta
+  const updateVenta = async ( data, cart ) =>{
+
+    let upVenta = {
+      "venta" : {
+        apellido: data.apellido,
+        nombre: data.nombre,
+        mail: data.mail,
+        fecha: data.fecha,
+        id_venta: data.id_venta,
+        cel: data.cel,
+        estado: data.estado,
+        total: data.total
+      },
+      "cart" : cart
+    }
+ 
+    console.log(upVenta);
+    console.log(cart);
+    
+    try {
+      const formData = new FormData();
+      formData.append('upVenta',upVenta); // 'archivo' debe ser el archivo que deseas enviar
+      formData.append('cart', cart); // Puedes agregar otros datos como un JSON stringificado
+
+      const response = await fetch(`http://${URL}/api/ventas/updateVenta`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(upVenta), 
+        credentials: 'include'
+      });
+      // Manejo de respuestas no autorizadas
+      if (response.status === 401) {
+        console.error('Error 401: No autorizado. Verifica tus credenciales o sesión.');
+        // Aquí puedes redirigir al usuario a la página de login o mostrar un mensaje de error
+        return { status: 401, message: 'No autorizado' };
+      }
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response
+    } catch (error) {
+      let response = { status: 500 }
+      console.error('problemas con la consulta:', error);
+      return response 
     }
   }
 
@@ -530,7 +824,7 @@ const CartProvider = ( { children } ) => {
   const [tipo, setTipo] = useState('')
   const [ubi, setUbi] = useState(false)
 
-  const refresh = () =>{
+const refresh = () =>{
     setUbi(false)
     setIdg('')
     setProducto([])
@@ -659,6 +953,10 @@ const alert = async (status) =>{
   return (
       // aca llamamos al hoock useMiContexto
       <MiContexto.Provider value={{
+        getCookie, view, setview,
+
+        getEstados, estados, setEstados,
+
         createTipo,
         getTipos, tipos,
 
@@ -680,6 +978,7 @@ const alert = async (status) =>{
         insertProdLug, updateproductolugar,
 
         registrarVenta, registrarProdsVenta, venta, setVenta, 
+        updateVenta,
         
         cart, setCart, 
         idv, setIdv,

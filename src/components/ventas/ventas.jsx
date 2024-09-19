@@ -6,16 +6,20 @@ import { Autocomplete, Button, FormControl, Grid, TextField } from '@mui/materia
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import SearchIcon from '@mui/icons-material/Search';
 import ReplyIcon from '@mui/icons-material/Reply';
-
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 export default function Ventas() {
 
     const {
+        estados,
         setVprod, setVent,
-        ventas, getVentas, getProductos,
+        ventas, getProductos, getLugares, getTipos,
         getVenta,
         refreshVenta
     } = useContext(MiContexto)
+
+    const router = useNavigate()
 
     const [rows, setRows] = useState([])
     //producto    
@@ -37,40 +41,32 @@ export default function Ventas() {
         { field: 'col7', headerName: 'Estado', width: 150 },
     ]
 
-    //modificar vista
-    const modiVista = async (view) =>{
-        if (view == 'ventas') {
-            await getVentas()
-            setVent(true)
-            setVprod(false)
-        }else{
-            await getProductos()
-            setVprod(true)
-            setVent(false)
-        }
-    }
-    
-    
 
     useEffect(()=>{
         let vents = []
         let ids = []
+        console.log(estados);
+        
         ventas.map((cliente)=>{ 
             console.log(cliente.id_venta);
-            let id = { label: cliente.id_venta }
-            let newCliente = {
-                id: cliente.id,
-                col0: cliente.id_venta, 
-                col1: cliente.fecha, 
-                col2: cliente.nombre,
-                col3: cliente.apellido,
-                col4: cliente.mail,
-                col5: cliente.cel,
-                col6: cliente.total,
-                col7: cliente.estado
-            }
-            vents.push(newCliente)
-            ids.push(id)
+            estados.map((est) =>{
+                if (cliente.estado == est.id) {
+                    let id = { label: cliente.id_venta }
+                    let newCliente = {
+                        id: cliente.id,
+                        col0: cliente.id_venta, 
+                        col1: cliente.fecha, 
+                        col2: cliente.nombre,
+                        col3: cliente.apellido,
+                        col4: cliente.mail,
+                        col5: cliente.cel,
+                        col6: cliente.total,
+                        col7: est.estado
+                    }
+                    vents.push(newCliente)
+                    ids.push(id)
+                }
+            })
         })
         setRows(vents)
         setids(ids)
@@ -80,7 +76,25 @@ export default function Ventas() {
     return (
         <div style={{ height: 350, width: '90%', margin: 'auto', marginTop: '15px' }}>
             <Grid container direction='row' gap={2} >
-                <Button variant="contained" color="info" startIcon={<ReplyIcon/>} sx={{width: '150px', height: '25px', padding: '20px' }} onClick={()=>{modiVista('productos')}}>productos</Button>
+                <Button variant="contained" color="info" startIcon={<ReplyIcon/>} sx={{width: '150px', height: '25px', padding: '20px' }} onClick={ async ()=>{
+                    let res = await getProductos()
+                    console.log(res);
+                    if(res.status == 401){
+                        Swal.fire({
+                            position: "center",
+                            icon: "error",
+                            title: "su session expiro",
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                        router('/')
+                    }else{
+                        await getLugares()
+                        await getTipos()
+                        setVprod(true)       
+                        setVent(false)    
+                    }
+                }}>productos</Button>
                 <Button variant="contained" endIcon={<RotateLeftIcon />} sx={{width: '100px', height: '25px', padding: '20px' }} onClick={()=>{refreshVenta()}}>refresh</Button>
             </Grid>            
             <Grid sx={{ display: { xs: 'none', md: 'grid', gridTemplateColumns: `repeat(6, 1fr)`, alignItems:'center'},  gap: '5px' }} container>
@@ -91,26 +105,38 @@ export default function Ventas() {
                     disablePortal
                     id="combo-box-demo"
                     options={ids}
-                    sx={{ width: 200 }}
+                    sx={{ width: 300 }}
                     onChange={handleChangeProd}
                     renderInput={(params) => <TextField {...params} label="ID's" />}
                     />  
                     </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                    <Button variant="contained"  sx={{padding: '10px' }} endIcon={<SearchIcon />} onClick={ async ()=>{ 
+                    <Button variant="contained"  sx={{padding: '15px' }} endIcon={<SearchIcon />} onClick={ async ()=>{ 
                         let res = await getVenta(ventid)
                         console.log(res);
-                        }} >buscar</Button>
+                        }} >ver</Button>
                 </Grid>
             </Grid>
             {/********************* */ }
             <Grid sx={{ display: { xs: 'grid', md: 'none' } }} container direction="column" justifyContent="flex-start" alignItems="center" >
-                
+                <Grid item xs={6}>
+                    <FormControl sx={{ marginTop: '25px' , width: '100%', paddingBottom: '25px'}}>
+                    <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    options={ids}
+                    sx={{ width: 300 }}
+                    onChange={handleChangeProd}
+                    renderInput={(params) => <TextField {...params} label="ID's" />}
+                    />  
+                    </FormControl>
+                </Grid>
                 <Grid item xs={2}>
                     <Button variant="contained"  sx={{padding: '10px', marginBottom: '15px'}} endIcon={<SearchIcon />} onClick={async()=>{ 
-                        
-                        }} >bcar</Button>
+                        let res = await getVenta(ventid)
+                        console.log(res);
+                        }} >ver</Button>
                 </Grid>
             </Grid>
             <DataGrid sx={{height: '500px'}} rows={rows} columns={columns}  />

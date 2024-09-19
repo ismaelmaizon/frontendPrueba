@@ -7,6 +7,7 @@ import SendIcon from '@mui/icons-material/Send';
 
 
 import { Page, Text, View, Document, PDFDownloadLink, StyleSheet } from '@react-pdf/renderer';
+import NavBar from "../navbar/navBar";
 
 
 export default function Dashboard () {
@@ -131,6 +132,8 @@ export default function Dashboard () {
 
 
     return(
+        <div>
+        <NavBar/>
         <Card sx={{ width: '70%', display: 'flex', flexDirection: 'column', margin: 'auto', marginTop: '20px', marginBottom: '20px', padding: '15px' }} border='solid 0px' boxShadow='5px 2px 15px' >
                                         <Grid container direction='column' margin='auto' >
                                                 <Typography margin='auto' variant="h3" component='h3' fontFamily={'fantasy'} >
@@ -180,7 +183,7 @@ export default function Dashboard () {
                                                 <Typography variant="h5" component='h3' >
                                                     Total: ${venta.total}
                                                 </Typography>
-                                                <Link to = '/' >
+                                                <Link to = '/inicio' >
                                                     <Button>cancelar</Button>
                                                 </Link>
                                             </Grid>
@@ -231,7 +234,7 @@ export default function Dashboard () {
                                                     alert('success')
                                                     setCart([])
                                                     setVenta({})
-                                                    router('/')
+                                                    router('/inicio')
                                                     }} >
                                                         finalizar 
                                                     </Button>
@@ -239,6 +242,7 @@ export default function Dashboard () {
                                             </Grid>
                                             
                                         </Grid>
-                                        </Card> 
+        </Card> 
+        </div>
     )
 }

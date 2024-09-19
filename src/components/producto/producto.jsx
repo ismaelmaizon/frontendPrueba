@@ -98,7 +98,7 @@ export default function Producto() {
                                 </Grid>
                             </Grid>
                     </Grid>
-                    <Grid  >
+                    <Grid >
                         <Ubiproducto />
                     </Grid> 
                 </Card>
