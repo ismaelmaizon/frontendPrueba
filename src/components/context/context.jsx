@@ -48,12 +48,10 @@ const CartProvider = ( { children } ) => {
           throw new Error('problemas al consultar en la navegacion');
         }
         const data = await response.json();
-        setEstados(data.response)
-        console.log(data.response);
-        
+        setEstados(data.response)        
       } catch (error) {
         let response = { status: 500 }
-        console.error('problemas con la consulta:', error);
+        console.error('problemas al obtener estados:', error);
         return response          
       }
   }
@@ -86,7 +84,7 @@ const CartProvider = ( { children } ) => {
         return response
       } catch (error) {
         let response = { status: 500 }
-        console.error('problemas con la consulta:', error);
+        console.error('problemas al crear tipo:', error);
         return response          
     }
   }
@@ -112,12 +110,10 @@ const CartProvider = ( { children } ) => {
           throw new Error('problemas al consultar en la navegacion');
         }
         const data = await response.json();
-        setTipos(data.response)
-        console.log(data.response);
-        
+        setTipos(data.response)        
       } catch (error) {
         let response = { status: 500 }
-        console.error('problemas con la consulta:', error);
+        console.error('problemas al obtener tipos:', error);
         return response          
       }
   }
@@ -147,7 +143,7 @@ const CartProvider = ( { children } ) => {
       return response
     } catch (error) {
       let response = { status: 500 }
-      console.error('problemas con la consulta:', error);
+      console.error('problemas al crear lugar:', error);
       return response    
     } 
   }
@@ -172,15 +168,13 @@ const CartProvider = ( { children } ) => {
             throw new Error('problemas al consultar en la navegacion');
           }
           const data = await response.json();
-          setLugares(data.response)
-          console.log(data.response);
-          
+          setLugares(data.response)          
         } catch (error) {
           let response = { status: 500 }
-          console.error('problemas con la consulta:', error);
+          console.error('problemas al obtener lugares:', error);
           return response            
         }
-    }
+  }
 
   //obtener productos
   const [productos, setProductos] = useState([])
@@ -209,7 +203,7 @@ const CartProvider = ( { children } ) => {
           return response
         } catch (error) {
           let response = { status: 500 }
-          console.error('problemas con la consulta:', error);
+          console.error('problemas al obtener productos:', error);
           return response        
         }
       
@@ -240,7 +234,7 @@ const CartProvider = ( { children } ) => {
           return data
         } catch (error) {
           let response = { status: 500 }
-          console.error('problemas con la consulta:', error);
+          console.error('problemas al obtener producto:', error);
           return response             
         }
       
@@ -406,8 +400,6 @@ const CartProvider = ( { children } ) => {
         throw new Error('problemas al consultar en la navegacion');
       }
       const data = await response.json();
-      console.log(data);
-      
       return data
       } catch (error) {
       let response = { status: 500 }
@@ -672,6 +664,8 @@ const CartProvider = ( { children } ) => {
     }
   }
   //obtener ventas
+  const [email, setEmail] = useState('')
+  const [emails, setEmails] = useState([])
   const [ventas, setVentas] = useState([])
   const getVentas = async () =>{
     try {
@@ -702,6 +696,7 @@ const CartProvider = ( { children } ) => {
         return response
       }
   }
+
   //obtener venta
   const [idv, setIdv] = useState('')
   const [ventainf, setVentainf] = useState([])
@@ -728,8 +723,6 @@ const CartProvider = ( { children } ) => {
         setIdv(data.venta[0].id_venta)
         setVentainf(data.venta[0])
         setVentainfProds(data.productos)
-        console.log(data);
-        
         return data
       } catch (error) {
       let response = { status: 500 }
@@ -818,51 +811,164 @@ const CartProvider = ( { children } ) => {
     }
   }
 
+
+  // Filtro productos
+  // rows (filas de la tabla) 
+  const [rowsVent, setRowsVent] = useState([])
+  const filtrarEmail = async (email) => {
+    setRowsVent([]);
+    let vent = [];
+    
+    ventas.map((cliente)=>{ 
+      if (cliente.email === email) {
+        estados.map((est) =>{
+            if (cliente.estado == est.id) {
+                let newCliente = {
+                    id: cliente.id,
+                    col0: cliente.id_venta, 
+                    col1: cliente.fecha, 
+                    col2: cliente.nombre,
+                    col3: cliente.apellido,
+                    col4: cliente.email,
+                    col5: cliente.cel,
+                    col6: cliente.total,
+                    col7: est.estado
+                }
+                vent.push(newCliente)
+              }
+          })
+      }
+    })
+
+
+
+    return vent
+  };
+  
+
   // Limpiar Filtro
   const [lug, setLug] = useState('')
   const [lado, setLado] = useState('')
   const [tipo, setTipo] = useState('')
   const [ubi, setUbi] = useState(false)
 
-const refresh = () =>{
-    setUbi(false)
-    setIdg('')
-    setProducto([])
-    setInfoprod([])
-    setTipo('')
-    setLado('')
-    setLug('')
-    let prods = []
-    productos.map((prod)=>{ 
-        console.log(prod.id);
-        tipos.map((ti)=>{
-          if (prod.Tipo == ti.id) {
-            let newProd = {
-                id: prod.id,
-                col0: prod.IdGenerate, 
-                col1: ti.Tipo, 
-                col2: ti.Descripcion,
-                col3: prod.Alto,
-                col4: prod.Ancho,
-                col5: prod.Derc,
-                col6: prod.Izq,
-                col7: prod.stock,
-                col8: prod.Precio_U
-              }
-              prods.push(newProd)
-        }
+  const refresh = () =>{
+      setUbi(false)
+      setIdg('')
+      setProducto([])
+      setInfoprod([])
+      setTipo('')
+      setLado('')
+      setLug('')
+      let prods = []
+      productos.map((prod)=>{ 
+          //console.log(prod.id);
+          tipos.map((ti)=>{
+            if (prod.Tipo == ti.id) {
+              let newProd = {
+                  id: prod.id,
+                  col0: prod.IdGenerate, 
+                  col1: ti.Tipo, 
+                  col2: ti.Descripcion,
+                  col3: prod.Alto,
+                  col4: prod.Ancho,
+                  col5: prod.Derc,
+                  col6: prod.Izq,
+                  col7: prod.stock,
+                  col8: prod.Precio_U
+                }
+                prods.push(newProd)
+          }
+      })
+      setRows(prods)})
+  }
+
+  const [idsvent, setidsVent] = useState([])
+
+  const refreshVenta = () =>{
+    setVentainf([])
+    setEmail('')
+    let vents = []
+    let ids = []
+    let em = []
+    ventas.map((cliente)=>{ 
+        em.push(cliente.email)
+        estados.map((est) =>{
+            if (cliente.estado == est.id) {
+                let id = { label: cliente.id_venta }
+                let newCliente = {
+                    id: cliente.id,
+                    col0: cliente.id_venta, 
+                    col1: cliente.fecha, 
+                    col2: cliente.nombre,
+                    col3: cliente.apellido,
+                    col4: cliente.email,
+                    col5: cliente.cel,
+                    col6: cliente.total,
+                    col7: est.estado
+                }
+                vents.push(newCliente)
+                ids.push(id)
+            }
+        })
     })
-    setRows(prods)})
-}
+    setRowsVent(vents)
+    setidsVent(ids)
+    setEmails(em)
+  }
 
-const refreshVenta = () =>{
-  setVentainf([])
-}
-
-//Alertas
-const alert = async (status) =>{
-  if (status == 'success') {
-    const Toast = Swal.mixin({
+  //Alertas
+  const alert = async (status) =>{
+    if (status == 'success') {
+      const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: "success",
+          title: "Proceso exitoso"
+        });
+    }else if (status == 'error') {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "Problemas con el proceso"
+      });
+    }else if (status == 'warning') {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "warning",
+        title: "producto no se encuentra en ningun lugar"
+      });
+    }else if (status == 'succesStock') {
+      const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
         showConfirmButton: false,
@@ -875,80 +981,28 @@ const alert = async (status) =>{
       });
       Toast.fire({
         icon: "success",
-        title: "Proceso exitoso"
+        title: "Stock Actualizado"
       });
-  }else if (status == 'error') {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "error",
-      title: "Problemas con el proceso"
-    });
-  }else if (status == 'warning') {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "warning",
-      title: "producto no se encuentra en ningun lugar"
-    });
-  }else if (status == 'succesStock') {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "success",
-      title: "Stock Actualizado"
-    });
-  }else if (status == 'errorCreate') {
-    const Toast = Swal.mixin({
-      toast: true,
-      position: "top-end",
-      showConfirmButton: false,
-      timer: 3000,
-      timerProgressBar: true,
-      didOpen: (toast) => {
-        toast.onmouseenter = Swal.stopTimer;
-        toast.onmouseleave = Swal.resumeTimer;
-      }
-    });
-    Toast.fire({
-      icon: "error",
-      title: "El Producto ya existe"
-    });
+    }else if (status == 'errorCreate') {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: "error",
+        title: "El Producto ya existe"
+      });
+    }
+
   }
-
-}
       
-
-  useEffect(()=>{
-    console.log('context');
-  },[])
 
   return (
       // aca llamamos al hoock useMiContexto
@@ -982,6 +1036,10 @@ const alert = async (status) =>{
         
         cart, setCart, 
         idv, setIdv,
+        emails, setEmails, email, setEmail,
+        rowsVent, setRowsVent,
+        filtrarEmail,
+        idsvent, setidsVent,
         
         getVentas, ventas, setVentas,
         getVenta ,ventainf, setVentainf, ventainfProds, setVentainfProds,

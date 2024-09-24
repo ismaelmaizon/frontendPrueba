@@ -2,7 +2,7 @@ import { DataGrid } from '@mui/x-data-grid';
 //import { useDemoData } from '@mui/x-data-grid-generator';
 import { useContext, useEffect, useState } from 'react';
 import { MiContexto } from '../context/context';
-import { Autocomplete, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Autocomplete, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import SearchIcon from '@mui/icons-material/Search';
 import ReplyIcon from '@mui/icons-material/Reply';
@@ -37,13 +37,13 @@ export default function Productos() {
 
     //set lugares
     const handleChangeLug = (event) => {
-        console.log(event.target.value)
+        //console.log(event.target.value)
         setLug(event.target.value)
     }
     //set lado
     const lados = ['Izq','Derc']    
     const handleChangeLado = (event) => {
-        console.log(event.target.value)
+        //console.log(event.target.value)
         setLado(event.target.value)
     }
     //set tipos 
@@ -104,10 +104,10 @@ export default function Productos() {
 
     return (
         <div style={{ height: 350, width: '90%', margin: 'auto', marginTop: '15px' }}>
+            <Typography sx={{ width: '200px', margin: 'auto', paddingBottom: '40px' }} variant='h4' >Productos</Typography>
             <Grid container direction='row' gap={2} >
                 <Button variant="contained" color="info" startIcon={<ReplyIcon/>} sx={{width: '100px', height: '25px', padding: '20px' }} onClick={ async ()=>{
                     let res = await getVentas()
-                    console.log(res);
                     if(res.status == 401){
                         Swal.fire({
                             position: "center",
@@ -222,7 +222,7 @@ export default function Productos() {
                         setProducto([])
                         getTipos()
                         let res = await getProducto(prod)
-                        console.log(res);
+                        //console.log(res);
                         setProducto(res) 
                         }} >ver</Button>
                 </Grid>

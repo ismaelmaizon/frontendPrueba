@@ -59,14 +59,11 @@ export default function PorductDetail() {
 
 
     useEffect(()=>{
-        console.log(imgs.length);
-        console.log(imgs);
-        console.log(imgs[0].url);
         tipos.map((ti)=>{
-            console.log(ti.id);
-            console.log(producto.Tipo)
+            //console.log(ti.id);
+            //console.log(producto.Tipo)
             if (producto.Tipo == ti.id) {
-                console.log('dentro');
+                //console.log('dentro');
                 let newProd = {
                     id: producto.id,
                     IdGenerate: producto.IdGenerate, 

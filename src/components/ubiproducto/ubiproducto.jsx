@@ -44,7 +44,7 @@ export default function Ubiproducto() {
             {
              !ubi ? <div></div> : <div className={clases.ubi} >{
                 infoprod.map((prod, index)=>{
-                            console.log(prod);
+                            //console.log(prod);
                             return (<div key={index} className={clases.ubi2} >
                                     <Grid container direction="row" padding={1} boxShadow='1px 1px 5px 1px' sx={{maxWidth: '200px' }} > 
                                         <Grid item xs={6} > 

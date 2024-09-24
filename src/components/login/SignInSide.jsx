@@ -54,7 +54,7 @@ export default function SignInSide() {
 
   const handleSubmit = (e) =>{
       e.preventDefault();
-      console.log(data);
+      //console.log(data);
   }
 
   return (
@@ -113,8 +113,6 @@ export default function SignInSide() {
                 label="Remember me"
               />
               <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={ async () =>{
-      
-                  console.log(data);
                   try {
                     const response = await fetch(`http://${URL}/api/logins/log`, {
                       method: 'POST',
@@ -135,10 +133,7 @@ export default function SignInSide() {
                     }else{
                       router('/inicio')
                     }
-                    console.log(response.status);
-
-                    console.log(response);                    
-                    
+                    console.log(response.status);                    
                   } catch (error) {
                     console.error('There was a problem with the fetch operation:', error);
                   }

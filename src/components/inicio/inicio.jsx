@@ -37,8 +37,6 @@ export default function Inicio() {
             })
         })
         setInfoprod(info)    
-        console.log(vprod);
-        console.log(vent);
         // Usar la función para obtener una cookie llamada "miCookie"
         const userView = getCookie('_UrB');
         setview(userView)
@@ -64,9 +62,8 @@ export default function Inicio() {
                 </div>
                 ) ) ) 
                : <div style={{ display: 'flex', marginTop: '45px' }} >
-                   <Button variant="contained" size="large" style={{ margin: 'auto', backgroundColor: '#ab47bc' }} onClick={ async ()=>{ 
+                   <Button variant="contained" size="large" color="secondary" style={{ height: '400px', width: '400px', margin: 'auto' }} onClick={ async ()=>{ 
                        let res = await getProductos()
-                       console.log(res);
                        if(res.status == 401){      
                         console.log(res.status);
                         Swal.fire({
@@ -85,7 +82,7 @@ export default function Inicio() {
                         }}
                        }
                         >Productos</Button>
-                   <Button variant="contained" size="large" style={{ margin: 'auto', backgroundColor: '#ab47bc' }} onClick={ async ()=>{ 
+                   <Button variant="contained" size="large" style={{ height: '400px', width: '400px', margin: 'auto', backgroundColor: '#ab47bc' }} onClick={ async ()=>{ 
                        let res = await getVentas()
                        if(res.status == 401){
                             console.log(res.status);

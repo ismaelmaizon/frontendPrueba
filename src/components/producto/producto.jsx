@@ -21,10 +21,7 @@ export default function Producto() {
 
     useEffect(()=>{
         tipos.map((ti)=>{
-            console.log(ti.id);
-            console.log(producto.Tipo)
             if (producto.Tipo == ti.id) {
-                console.log('dentro');
                 let newProd = {
                     id: producto.id,
                     IdGenerate: producto.IdGenerate, 
@@ -89,7 +86,7 @@ export default function Producto() {
                                         <Button size="small" color="info" variant="contained" onClick={async ()=>{ 
                                             const res = await getProductoIms(producto.IdGenerate) 
                                             setImgs(res) 
-                                            console.log(res);
+                                            //console.log(res);
                                             
                                             if (res) {
                                                 router('/detalle')

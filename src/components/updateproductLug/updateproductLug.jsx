@@ -29,7 +29,7 @@ export default function UpdateProductLug () {
     const [lugar, setLugar] = useState([])
     
     const procedimiento = [
-        {name: 'agregar'}, { name: 'quitar'}
+        'agregar','quitar'
     ]
     
     const dataFrom = async (event) => {
@@ -69,20 +69,10 @@ export default function UpdateProductLug () {
                 <Typography margin='auto' variant="h6" > <FmdGoodIcon/> {lugar}  </Typography>
                 <Grid container direction="column" rowSpacing={2} marginTop={2} >
                     <Grid item xs={6}>
-                    <TextField 
-                        required
-                        fullWidth 
-                        label='Ingrese cantidad de unidades' 
-                        name='stock' 
-                        type="number" 
-                        onChange={dataFrom}/>
-                    </Grid>
-                   
-                    <Grid item xs={6}>
                     <TextField
                         required
                         fullWidth
-                        sx={{height: '10px' , marginBottom: '100px' }}
+                        sx={{height: '10px' , marginBottom: '60px' }}
                         id="outlined-select-currency"
                         select
                         label="Agregar / Quitar"
@@ -91,11 +81,20 @@ export default function UpdateProductLug () {
                         onChange={dataFrom}
                         >
                         {procedimiento.map((option, index) => (
-                            <MenuItem key={index} value={option.name}>
-                            {option.name}
+                            <MenuItem key={index} value={option}>
+                            {option}
                             </MenuItem>
                         ))}
                     </TextField>
+                    </Grid>
+                    <Grid item xs={6}>
+                    <TextField 
+                        required
+                        fullWidth 
+                        label='Ingrese cantidad de unidades' 
+                        name='stock' 
+                        type="number" 
+                        onChange={dataFrom}/>
                     </Grid>
                     <Grid container direction ='row' sx={{ width:'500px', margin: 'auto' }} spacing={5} >
                         <Grid item xs={6} >

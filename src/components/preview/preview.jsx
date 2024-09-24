@@ -23,8 +23,12 @@ export default function Preview () {
     const [cliente, setCliente] = useState({
         nombre: '',
         apellido: '',
-        mail: '',
-        cel: ''
+        email: '',
+        cel: '',
+        provincia: '',
+        localidad: '',
+        calle: '',
+        altura: 0
     });
     const dataFrom = async (event) => {
         event.preventDefault()
@@ -133,19 +137,35 @@ export default function Preview () {
                                                 })}
                                             </Grid>
                                             <Grid item xs={4} container direction="row" alignContent='flex-start'>
-                                                    <Typography fontSize={15} marginBottom={2} >Datos Cliente</Typography>
-                                                    <Grid container direction="column" spacing={2} onSubmit={handleSubmit} >
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='nombre' name='nombre' type="text" onChange={dataFrom}></TextField>
+                                                    <Typography variant="h5" marginBottom={2} >Datos Cliente</Typography>
+                                                    <Grid container direction="row" spacing={4} onSubmit={handleSubmit} >
+                                                        <Grid item xs={6} container direction='column' spacing={2} >
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='nombre' name='nombre' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='apellido' name='apellido' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='email' name='email' type="email" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='cel' name='cel' type="number" onChange={dataFrom}></TextField>
+                                                            </Grid>
                                                         </Grid>
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='apellido' name='apellido' type="text" onChange={dataFrom}></TextField>
-                                                        </Grid>
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='mail' name='mail' type="email" onChange={dataFrom}></TextField>
-                                                        </Grid>
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='cel' name='cel' type="number" onChange={dataFrom}></TextField>
+                                                        <Grid item xs={6} container direction='column' spacing={2}>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='provincia' name='provincia' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='localidad' name='localidad' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='calle' name='calle' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='altura' name='altura' type="number" onChange={dataFrom}></TextField>
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
                                             </Grid>
