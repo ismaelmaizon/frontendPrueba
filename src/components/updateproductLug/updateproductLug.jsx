@@ -3,6 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import { MiContexto } from "../context/context";
 import { useNavigate } from "react-router-dom";
 
+//icon
+import FmdGoodIcon from '@mui/icons-material/FmdGood';
+import NavBar from "../navbar/navBar";
+
 
 
 
@@ -25,7 +29,7 @@ export default function UpdateProductLug () {
     const [lugar, setLugar] = useState([])
     
     const procedimiento = [
-        {name: 'agregar'}, { name: 'quitar'}
+        'agregar','quitar'
     ]
     
     const dataFrom = async (event) => {
@@ -55,14 +59,34 @@ export default function UpdateProductLug () {
 
 
     return(
-        <Box sx={{ width: '60%', margin: 'auto', marginTop: '120px', padding: '15px' }} >
-            <Typography variant="h5" gutterBottom>
-                Producto:
+        <div>
+        <NavBar/>
+        <Box sx={{ width: '60%', margin: 'auto', marginTop: '120px', padding: '15px', boxShadow: '2px 2px 10px 2px' }} >
+            <Typography variant="h4" gutterBottom sx={{ width:'400px', margin: 'auto' }}>
+                ID: {data.Idg}
             </Typography>
             <Box component='form' onSubmit={handleSubmit} display={'flex'} flexDirection={'column'} >
-                <Typography margin='auto' variant="h5"  > {data.Idg}  </Typography>
-                <Typography margin='auto' variant="h6" > ubicacion: {lugar}  </Typography>
+                <Typography margin='auto' variant="h6" > <FmdGoodIcon/> {lugar}  </Typography>
                 <Grid container direction="column" rowSpacing={2} marginTop={2} >
+                    <Grid item xs={6}>
+                    <TextField
+                        required
+                        fullWidth
+                        sx={{height: '10px' , marginBottom: '60px' }}
+                        id="outlined-select-currency"
+                        select
+                        label="Agregar / Quitar"
+                        name="procedimiento"
+                        helperText="quiere agregar o quitar?"
+                        onChange={dataFrom}
+                        >
+                        {procedimiento.map((option, index) => (
+                            <MenuItem key={index} value={option}>
+                            {option}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    </Grid>
                     <Grid item xs={6}>
                     <TextField 
                         required
@@ -72,44 +96,25 @@ export default function UpdateProductLug () {
                         type="number" 
                         onChange={dataFrom}/>
                     </Grid>
-                   
-                    <Grid item xs={6}>
-                    <TextField
-                        required
-                        fullWidth
-                        sx={{height: '10px' , marginBottom: '100px' }}
-                        id="outlined-select-currency"
-                        select
-                        label="Agregar / Quitar"
-                        name="procedimiento"
-                        helperText="quiere agregar o quitar?"
-                        onChange={dataFrom}
-                        >
-                        {procedimiento.map((option, index) => (
-                            <MenuItem key={index} value={option.name}>
-                            {option.name}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    </Grid>
-                    <Grid item xs={6} container direction='row' width='100%' >
+                    <Grid container direction ='row' sx={{ width:'500px', margin: 'auto' }} spacing={5} >
                         <Grid item xs={6} >
-                            <Button type="submit" onClick={ async ()=>{
+                            <Button type="submit" variant="contained" size="small" sx={{ width:'200px'}}  onClick={ async ()=>{
                                 console.log(data);
                                 let res = await updateproductolugar(data)
                                 let resStock = await updateStockProduct(data.Idg)
-                                res && resStock ? (alert('success'), refresh(), router('/') ) : alert('error')
-                            }} sx={{ width: '45%', height: '50px', backgroundColor: 'Black', margin: 'auto'}} >crear</Button>
+                                res && resStock ? (alert('success'), refresh(), router('/inicio') ) : alert('error')
+                            }}>crear</Button>
                         </Grid>
                         <Grid item xs={6}>
-                            <Button type="submit" onClick={()=>{
+                            <Button type="submit" variant="contained" size="small" sx={{ width:'200px'}}  onClick={()=>{
                                 refresh()
-                                router('/')
-                            }} sx={{ width: '45%', height: '50px', backgroundColor: 'Black', margin: 'auto'}} >volver</Button>
+                                router('/inicio')
+                            }}>volverr</Button>
                         </Grid>
                     </Grid>
                 </Grid>
             </Box>
         </Box>
+        </div>
     )
 }

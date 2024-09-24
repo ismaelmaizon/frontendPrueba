@@ -6,9 +6,8 @@ import { Fragment,useContext,useState } from 'react';
 import { Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import BackupIcon from '@mui/icons-material/Backup';
-import AssignmentIcon from '@mui/icons-material/Assignment';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 //import Link from '@mui/material/Link';
 import { Link } from 'react-router-dom';
@@ -36,10 +35,9 @@ export default function NavBar() {
       setState({ ...state, [anchor]: open });
     };    
     const links = [
-      {text: 'Agregar Producto', url: '/addproducto', icon: AddIcon },
-      {text: 'Agregar Lugar', url: '/addlugar', icon: BackupIcon },
-      {text: 'Agregar Tipo', url: '/addtipo', icon: DeleteIcon },
-      {text: 'Modificar Stock', url: '/', icon: AssignmentIcon }
+      {text: 'Agregar Producto', url: '/addproducto', icon: BorderColorIcon },
+      {text: 'Agregar Lugar', url: '/addlugar', icon: AddLocationIcon },
+      {text: 'Agregar Tipo', url: '/addtipo', icon: AddIcon },
     ]
   
     const list = (anchor) => (
@@ -85,7 +83,7 @@ export default function NavBar() {
                 </Drawer>
               </Fragment>
           </div>
-          <Link to='/' >
+          <Link to='/inicio' >
             <Typography
               variant="h6"
               noWrap

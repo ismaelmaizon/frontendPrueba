@@ -6,23 +6,22 @@ import { MiContexto } from "../context/context"
 import {Button, Card, CardContent, Grid, Typography} from '@mui/material';
 import { Link,  } from "react-router-dom"
 import Ubiproducto from "../ubiproducto/ubiproducto";
+import { useNavigate } from "react-router-dom";
 
 export default function Producto() {
     const {
         tipos,
         producto,
         getUbiProducto, setUbi,
-        setIdg, alert,
+        setIdg, alert, getProductoIms, setImgs
     } = useContext(MiContexto)
-
+    const router = useNavigate()
     const [ prod, setProd ] = useState({})
+
 
     useEffect(()=>{
         tipos.map((ti)=>{
-            console.log(ti.id);
-            console.log(producto.Tipo)
             if (producto.Tipo == ti.id) {
-                console.log('dentro');
                 let newProd = {
                     id: producto.id,
                     IdGenerate: producto.IdGenerate, 
@@ -43,7 +42,7 @@ export default function Producto() {
 
     return (
         <div>
-            {producto.length == 0 ? <div></div> : <Card sx={{ maxWidth: 1000, margin: 'auto', marginTop: '25px', boxShadow: '2px 2px 10px 2px'  }}>
+            {producto.length == 0 ? <div></div> : <Card sx={{margin: 'auto', marginTop: '25px', maxWidth: '1000px'  }}>
                     <Grid container direction='row' alignItems='center' style={{ maxWidth: '600px', margin: 'auto' }} >
                             <Grid item xs={6} container>
                                 <CardContent>
@@ -84,15 +83,21 @@ export default function Producto() {
                                     }} >ver Ubicaciones</Button>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <Link to='/detalle'>
-                                        <Button size="small" color="info" variant="contained">detalle</Button>
-                                    </Link>
+                                        <Button size="small" color="info" variant="contained" onClick={async ()=>{ 
+                                            const res = await getProductoIms(producto.IdGenerate) 
+                                            setImgs(res) 
+                                            //console.log(res);
+                                            
+                                            if (res) {
+                                                router('/detalle')
+                                            }
+                                            }} >detalle</Button>
                                 </Grid>
                             </Grid>
-                    </Grid> 
-                    <Grid >
-                        <Ubiproducto/>
                     </Grid>
+                    <Grid >
+                        <Ubiproducto />
+                    </Grid> 
                 </Card>
              } 
     </div>)}

@@ -2,13 +2,14 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useContext, useState } from "react";
 import { MiContexto } from "../context/context";
 import { useNavigate } from "react-router-dom";
+import NavBar from "../navbar/navBar";
 
 
 
 
 export default function AddLugar () {
 
-    const {createLugar, getLugares ,alert} = useContext(MiContexto)
+    const {createLugar, getLugares ,alert, refresh} = useContext(MiContexto)
 
     const router = useNavigate()
 
@@ -28,6 +29,8 @@ export default function AddLugar () {
 
 
     return(
+        <div>
+        <NavBar/>
         <Box sx={{ width: '60%', margin: 'auto', marginTop: '120px', padding: '15px', boxShadow: '2px 2px 10px 2px' }} >
             <Typography variant="h4" gutterBottom sx={{ width:'200px', margin: 'auto' }}>
                 Nuevo Lugar
@@ -38,17 +41,28 @@ export default function AddLugar () {
                         <TextField fullWidth label='Ingrese nuevo lugar' name='fullname' type="text" onChange={dataFrom}></TextField>
                         </Grid>
                     </Grid>
-            <Button type="submit" variant="contained" size="small" sx={{ width:'200px', margin: 'auto' }}  onClick={ async ()=>{
-                console.log(data);
-                let respon = await createLugar(data)
-                console.log(respon.status);
-                if (respon.status == 200) {
-                    await getLugares()
-                    await alert('success')
-                    router('/')
-                }
-            }} >crear</Button>
+            <Grid container direction ='row' sx={{ width:'500px', margin: 'auto' }} spacing={5} >
+                    <Grid item xs={6}  >
+                    <Button type="submit" variant="contained" size="small" sx={{ width:'200px', margin: 'auto' }}  onClick={ async ()=>{
+                        console.log(data);
+                        let respon = await createLugar(data)
+                        console.log(respon.status);
+                        if (respon.status == 200) {
+                            await getLugares()
+                            await alert('success')
+                            router('/inicio')
+                        }
+                    }} >crear</Button>
+                    </Grid>
+                    <Grid item xs={6}  >
+                        <Button type="submit" variant="contained" size="small" sx={{ width:'200px'}} onClick={()=>{
+                            refresh()
+                            router('/inicio')
+                        }}>volver</Button>
+                    </Grid>
+                </Grid>
             </Box>
         </Box>
+        </div>
     )
 }

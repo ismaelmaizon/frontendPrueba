@@ -4,12 +4,15 @@ import { MiContexto } from "../context/context";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
+import NavBar from "../navbar/navBar";
 
 
 
 export default function Preview () {
 
-    const {productos ,cart, setCart, venta, setVenta,
+    const {
+        tipos,
+        productos ,cart, setCart, venta, setVenta,
         registrarVenta
     } = useContext(MiContexto)
 
@@ -20,8 +23,12 @@ export default function Preview () {
     const [cliente, setCliente] = useState({
         nombre: '',
         apellido: '',
-        mail: '',
-        cel: ''
+        email: '',
+        cel: '',
+        provincia: '',
+        localidad: '',
+        calle: '',
+        altura: 0
     });
     const dataFrom = async (event) => {
         event.preventDefault()
@@ -31,8 +38,6 @@ export default function Preview () {
     const handleSubmit = (e) =>{
         e.preventDefault();
     }
-
-
 
     const deletePordCart = (id) => {
         const newCart = cart.filter(el => el.id !== id)
@@ -74,13 +79,23 @@ export default function Preview () {
                 }
             })  
         })
-        setCart(newCart)
         setTotal(full)
+        tipos.map((ti)=>{
+            newCart.map((el)=>{
+                if(ti.id == el.Tipo){
+                    el.Tipo = ti.Tipo
+                }
+            })
+        })
+        setCart(newCart)
+        console.log(cart);
+        
         
     }, [])
 
     return(
         <div>
+            <NavBar/>
             {
                 cart.length == 0 ? <Typography> El carrito se encuentra vacio </Typography> : 
             
@@ -90,52 +105,67 @@ export default function Preview () {
                                         </Grid>
                                         <Grid container direction='row' gap={5} >
                                             <Grid item xs={6} container direction='column' padding={2} >
-                                                {
-                                                cart.map((el, index)=>{ 
+                                                {cart.map((el, index)=>{ 
                                                     return <Grid item xs={2} key={index}
-                                                                container direction="row" color='grey.300' gap={5} 
+                                                                container direction="row" color='grey.300' gap={0} 
                                                                 border='solid 0px' boxShadow='5px 0px 12px 2px' borderRadius={3} margin={1}
                                                                 padding={2}>
                                                                 
-                                                                <Grid item xs={2} color='black' >
+                                                                <Grid item xs={12} color='black' >
                                                                     <Typography paddingBottom={3} alignSelf='flex-start'>
+                                                                        Tipo: {el.Tipo}
+                                                                    </Typography>  
+                                                                    <Typography>
                                                                         Producto: {el.idg} 
                                                                     </Typography>  
                                                                     <Typography >
-                                                                        {el.lugar} 
+                                                                        Lugar: {el.lugar} 
                                                                     </Typography> 
                                                                     <Typography >
-                                                                        Cant: {el.cantidad} 
+                                                                        Cantidad: {el.cantidad} 
                                                                     </Typography>
                                                                 </Grid>
-                                                                <Grid item xs={2} color='black' alignSelf='flex-end' >
+                                                                <Grid item xs={8} color='black' alignSelf='flex-end' >
                                                                     <Typography >
                                                                         SubTotal: {el.subTotal}
                                                                     </Typography>
                                                                 </Grid>
-                                                                <Grid item xs={2} color='black' alignSelf='flex-end' >
-                                                                    <Button startIcon={<DeleteIcon/>} onClick={()=>{deletePordCart(el.id)}} >
-                                                                        Delete 
-                                                                    </Button>
+                                                                <Grid item xs={4} color='black' alignSelf='flex-start' >
+                                                                    <Button size="largex2" startIcon={<DeleteIcon />} onClick={()=>{deletePordCart(el.id)}} ></Button>
                                                                 </Grid>
                                                         </Grid>
-                                                })
-                                                }
+                                                })}
                                             </Grid>
                                             <Grid item xs={4} container direction="row" alignContent='flex-start'>
-                                                    <Typography fontSize={15} marginBottom={2} >Datos Cliente</Typography>
-                                                    <Grid container direction="column" spacing={2} onSubmit={handleSubmit} >
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='nombre' name='nombre' type="text" onChange={dataFrom}></TextField>
+                                                    <Typography variant="h5" marginBottom={2} >Datos Cliente</Typography>
+                                                    <Grid container direction="row" spacing={4} onSubmit={handleSubmit} >
+                                                        <Grid item xs={6} container direction='column' spacing={2} >
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='nombre' name='nombre' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='apellido' name='apellido' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='email' name='email' type="email" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='cel' name='cel' type="number" onChange={dataFrom}></TextField>
+                                                            </Grid>
                                                         </Grid>
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='apellido' name='apellido' type="text" onChange={dataFrom}></TextField>
-                                                        </Grid>
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='mail' name='mail' type="email" onChange={dataFrom}></TextField>
-                                                        </Grid>
-                                                        <Grid item xs={2}>
-                                                        <TextField fullWidth label='cel' name='cel' type="number" onChange={dataFrom}></TextField>
+                                                        <Grid item xs={6} container direction='column' spacing={2}>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='provincia' name='provincia' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='localidad' name='localidad' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='calle' name='calle' type="text" onChange={dataFrom}></TextField>
+                                                            </Grid>
+                                                            <Grid item xs={2}>
+                                                            <TextField fullWidth label='altura' name='altura' type="number" onChange={dataFrom}></TextField>
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
                                             </Grid>
@@ -145,7 +175,7 @@ export default function Preview () {
                                                 <Typography fontSize={20} >
                                                     Total: ${total}
                                                 </Typography>
-                                                <Link to = '/' >
+                                                <Link to = '/inicio' >
                                                     <Button>volver</Button>
                                                 </Link>
                                             </Grid>
